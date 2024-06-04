@@ -33,7 +33,7 @@ def get_octopus_products(psql_config, headers=None):
     create_octopus_products_db(psql_config, table_name)
     insert_octopus_energy_products(psql_config, data, table_name)
 
-    insert_updates(table_name)
+    insert_updates(psql_config, table_name)
 
     pass
 
