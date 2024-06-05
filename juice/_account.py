@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 import json
 import requests
 from requests.auth import HTTPBasicAuth
+from os import path
+import sys
 
 from ._psql import query_ldz
 from ._data import OCOTPUS_API_BASE_URL
@@ -18,8 +20,11 @@ def set_account_info(self):
 @staticmethod
 def read_account_json(ACCOUNT_ID):
 
+    script_dir = path.dirname(sys.argv[0])
+    account_json = path.join(script_dir, 'Accounts', f'{ACCOUNT_ID}.json')
+
     try:
-        with open(f'./Accounts/{ACCOUNT_ID}.json', 'r') as file:
+        with open(account_json, 'r') as file:
             data = json.load(file)
     except FileNotFoundError:
         return None
@@ -47,7 +52,10 @@ def get_account_info(API_KEY, ACCOUNT_ID):
         if property['gas_meter_points']:
             property['LDZ'] = query_ldz(property['postcode'].replace(' ', ''))
 
-    with open(f'./Accounts/{ACCOUNT_ID}.json', 'w') as file:
+    script_dir = path.dirname(sys.argv[0])
+    account_json = path.join(script_dir, 'Accounts', f'{ACCOUNT_ID}.json')
+
+    with open(account_json, 'w') as file:
         file.write(json.dumps(data, default=str))
 
     return data
