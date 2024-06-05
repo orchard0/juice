@@ -12,7 +12,8 @@ from ._data import OCOTPUS_API_BASE_URL
 def set_account_info(self):
     data = self.read_account_json(self.ACCOUNT_ID)
     if not data:
-        data = self.get_account_info(self.API_KEY, self.ACCOUNT_ID)
+        data = self.get_account_info(self.psql_config, self.API_KEY,
+                                     self.ACCOUNT_ID)
 
     return data
 
@@ -37,7 +38,7 @@ def read_account_json(ACCOUNT_ID):
 
 
 @staticmethod
-def get_account_info(API_KEY, ACCOUNT_ID):
+def get_account_info(psql_config, API_KEY, ACCOUNT_ID):
     ACCOUNT_URL = OCOTPUS_API_BASE_URL + f'/accounts/{ACCOUNT_ID}'
 
     response = requests.get(ACCOUNT_URL, auth=HTTPBasicAuth(API_KEY, ''))
@@ -50,7 +51,8 @@ def get_account_info(API_KEY, ACCOUNT_ID):
 
     for property in data['properties']:
         if property['gas_meter_points']:
-            property['LDZ'] = query_ldz(property['postcode'].replace(' ', ''))
+            property['LDZ'] = query_ldz(psql_config,
+                                        property['postcode'].replace(' ', ''))
 
     script_dir = path.dirname(sys.argv[0])
     account_json = path.join(script_dir, 'Accounts', f'{ACCOUNT_ID}.json')
