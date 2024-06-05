@@ -1,5 +1,4 @@
 import datetime
-from signal import raise_signal
 import psycopg
 from psycopg.sql import SQL, Identifier, Literal
 import re

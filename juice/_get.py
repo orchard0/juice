@@ -1,4 +1,3 @@
-from email.header import Header
 import random
 import time
 import requests

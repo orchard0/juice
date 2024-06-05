@@ -120,7 +120,7 @@ def print_compare(self, from_date=None, to_date=None, energy_type=None):
         if from_date and to_date:
             datax = datax.loc[(datax['from'] >= from_date)
                               & (datax['from'] < to_date)]
-        total = datax[name + '_total'].sum()
+        total = datax[name + '_total'].sum() * np.float64(1.05)
         totals.append(total)
 
     totals_np = np.array(totals)
