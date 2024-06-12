@@ -183,7 +183,12 @@ def calc_costs(dataframes):
 @staticmethod
 def run_config(psql_config, data, from_date, to_date, LDZ=None):
 
-    print("Getting consumption figures from", from_date, "to", to_date)
+    print(
+        "Getting consumption figures from",
+        format_date(from_date),
+        "to",
+        format_date(to_date),
+    )
 
     consumption_df = pd.concat(
         get_consumption(psql_config, dbname, from_date, to_date)
@@ -282,10 +287,6 @@ def calculate(self, from_date=None, to_date=None, energy_type=None):
                 raise ValueError(
                     f"The calculation's date range {format_date(from_date)} to {format_date(to_date)} do not fall within {method['name']}'s date range {format_date(method_from_date)} to {format_date(method_to_date_display)}"
                 )
-
-            print(from_date, method_from_date, to_date, method_to_date)
-
-        pass
 
     check_method_dates(data["methods"], from_date, to_date)
 

@@ -39,8 +39,9 @@ def print_cost(method, from_date, to_date):
 
     data = method["dataframe"]
 
-    cost_unit_rate = method["name"] + "_cost_unit_rate"
-    cost_standing_charge = method["name"] + "_cost_standing_charge"
+    name = method["name"]
+    cost_unit_rate = name + "_cost_unit_rate"
+    cost_standing_charge = name + "_cost_standing_charge"
 
     def format_pound(item):
         return f"£{'{0:.2f}'.format(item)}"
@@ -74,7 +75,7 @@ def print_cost(method, from_date, to_date):
 
         extracted_naive = data.loc[(data["from"] < to_date) & (data["to"] > from_date)]
 
-    print(from_date, "to", to_date)
+    print(name, "from", from_date, "to", to_date)
     print("Dates extracted - total rows:", extracted_aware.shape[0])
 
     try:
@@ -96,7 +97,7 @@ def print_cost(method, from_date, to_date):
     vat = ((subtotal / 100) * 5).round(2)
     total = (subtotal + vat).round(2)
 
-    table = PrettyTable([method["name"], "Consumption", "Cost"])
+    table = PrettyTable([name, "Consumption", "Cost"])
     table.add_row(["Total consumption", f"{use}kWh", format_pound(cost_rate)])
     table.add_row(["Standing charge", format_days(days), format_pound(cost_standing)])
     table.add_row(["Subtotal", "", format_pound(subtotal)])
