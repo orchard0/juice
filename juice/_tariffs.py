@@ -1,4 +1,4 @@
-from ._psql import query_octopus_tariff_family
+from ._psql import query_octopus_tariff_by_family, query_octopus_tariff_by_product_code
 
 def remove_tariff(self, energy_type, name):
 
@@ -22,13 +22,27 @@ def add_method_by_tariff_family(self, display_name, energy_type=None):
 
     if isinstance(display_name, list):
         for dn in display_name:
-            tariffs = query_octopus_tariff_family(self.psql_config, dn, energy_type, self.GSP)
+            tariffs = query_octopus_tariff_by_family(self.psql_config, dn, energy_type, self.GSP)
             self.add_method(energy_type, dn, tariffs)
     elif isinstance(display_name, str):
-        tariffs = query_octopus_tariff_family(self.psql_config, display_name, energy_type, self.GSP)
+        tariffs = query_octopus_tariff_by_family(self.psql_config, display_name, energy_type, self.GSP)
         self.add_method(energy_type, display_name, tariffs)
     pass
 
+def add_method_by_product_code(self, product_code, energy_type=None):
+
+    if energy_type is None:
+        energy_type = self.energy_type
+    self.check_energy_type_input(energy_type)
+
+    if isinstance(product_code, list):
+        for dn in product_code:
+            tariffs = query_octopus_tariff_by_product_code(self.psql_config, dn, energy_type, self.GSP)
+            self.add_method(energy_type, dn, tariffs)
+    elif isinstance(product_code, str):
+        tariffs = query_octopus_tariff_by_product_code(self.psql_config, product_code, energy_type, self.GSP)
+        self.add_method(energy_type, product_code, tariffs)
+    pass
 
 
 def add_bill(self, energy_type=None):
@@ -58,15 +72,26 @@ def add_method(self, energy_type, name, agreements, replace=False):
     elif searched and not replace:
         raise ValueError(f'{name} method already exist. Either remove it first or use the replace parameter.')
 
+    def dates_for_method(agreements):
+
+        x = sorted(agreements, key=lambda d: d['valid_from'])
+
+        from_date = x[0]['valid_from']
+        to_date = x[-1]['valid_to']
+
+        return from_date, to_date
+
+    method_from_date, method_to_date = dates_for_method(agreements)
+
     method = {
         'name': name,
         'agreements': agreements,
+        'from_date': method_from_date,
+        'to_date': method_to_date,
         'cost_types': {
             '_standard_unit_rates': [],
             '_standing_charges': [],
-        },
-        'retrival':
-        None 
+        }        
     }
     
     data['methods'].append(method)

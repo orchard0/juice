@@ -5,6 +5,7 @@ from pathlib import Path
 import sys
 import getpass
 from ._psql import create_updates_table
+from datetime import datetime
 
 ENERGY_TYPES = {'gas', 'electricity'}
 
@@ -13,7 +14,7 @@ class Juice:
 
     from ._account import set_account_info, read_account_json, get_account_info, parse_account_information
     from ._get import get_octopus_products, get_consumption, get_tariffs, get_calorific_values
-    from ._tariffs import remove_tariff, add_bill, add_consumption, add_method, add_method_by_tariff_family
+    from ._tariffs import remove_tariff, add_bill, add_consumption, add_method, add_method_by_tariff_family, add_method_by_product_code
     from ._bill import run_config, calculate
     from ._print import print_bill, print_method, print_compare, print_checks
 
@@ -39,6 +40,8 @@ class Juice:
         self.CONSUMPTION, self.AGREEMENTS, self.GSP, queried_ldz = self.parse_account_information(
             self.ACCOUNT_DATA)
         
+        self.MOVED_IN_AT = datetime.fromisoformat( self.ACCOUNT_DATA['properties'][0]['moved_in_at'])
+
         if LDZ:
             self.LDZ = LDZ
         else:

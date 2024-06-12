@@ -1,22 +1,25 @@
-import datetime
+from datetime import datetime
 import psycopg
 from psycopg.sql import SQL, Identifier, Literal
 import re
 
 
-def create_updates_table(psql_config, table_name='updates'):
+def create_updates_table(psql_config, table_name="updates"):
     conn = psycopg.connect(**psql_config)
     curr = conn.cursor()
 
     try:
         curr.execute(
-            SQL("""
+            SQL(
+                """
             CREATE TABLE IF NOT EXISTS {} (
                 id serial PRIMARY KEY,
                 name varchar unique not null,
                 updated timestamptz not null
              )
-            """).format(Identifier(table_name)))
+            """
+            ).format(Identifier(table_name))
+        )
 
     except psycopg.errors.DuplicateTable:
         pass
@@ -25,17 +28,20 @@ def create_updates_table(psql_config, table_name='updates'):
     pass
 
 
-def insert_updates(psql_config, updated_table_name, table_name='updates'):
+def insert_updates(psql_config, updated_table_name, table_name="updates"):
     conn = psycopg.connect(**psql_config)
     curr = conn.cursor()
 
     try:
         curr.execute(
-            SQL("""
+            SQL(
+                """
             INSERT INTO {} (name, updated) VALUES ({}, CURRENT_TIMESTAMP) \
                 ON CONFLICT (name) DO UPDATE \
                 SET updated = EXCLUDED.updated 
-            """).format(Identifier(table_name), Literal(updated_table_name)))
+            """
+            ).format(Identifier(table_name), Literal(updated_table_name))
+        )
 
     except psycopg.errors.DuplicateTable:
         pass
@@ -44,9 +50,10 @@ def insert_updates(psql_config, updated_table_name, table_name='updates'):
     pass
 
 
-def query_updates(psql_config, updated_table_name, table_name='updates'):
+def query_updates(psql_config, updated_table_name, table_name="updates"):
     query = SQL("select updated from {} where name = {} limit 1").format(
-        Identifier(table_name), Literal(updated_table_name))
+        Identifier(table_name), Literal(updated_table_name)
+    )
     result = retrive(psql_config, query)
     try:
         r = result[0][0]
@@ -55,14 +62,14 @@ def query_updates(psql_config, updated_table_name, table_name='updates'):
     return r
 
 
-def create_octopus_products_db(psql_config,
-                               table_name='products_octopus_energy'):
+def create_octopus_products_db(psql_config, table_name="products_octopus_energy"):
     conn = psycopg.connect(**psql_config)
     curr = conn.cursor()
 
     try:
         curr.execute(
-            SQL("""
+            SQL(
+                """
             CREATE TABLE {} (
                 id serial PRIMARY KEY,
                 code varchar unique not null,
@@ -82,7 +89,9 @@ def create_octopus_products_db(psql_config,
                 updated timestamptz,
                 brand varchar not null
              )
-            """).format(Identifier(table_name)))
+            """
+            ).format(Identifier(table_name))
+        )
 
     except psycopg.errors.DuplicateTable:
         pass
@@ -91,15 +100,15 @@ def create_octopus_products_db(psql_config,
     pass
 
 
-def insert_octopus_energy_products(psql_config,
-                                   data,
-                                   table_name='products_octopus_energy'):
+def insert_octopus_energy_products(
+    psql_config, data, table_name="products_octopus_energy"
+):
     conn = psycopg.connect(**psql_config)
     curr = conn.cursor()
 
     for row in data:
         insert_query = SQL(
-            'INSERT INTO {} (code, full_name, display_name, description, is_variable, is_green, is_tracker, is_prepay, is_business, is_restricted, term, available_from, available_to, brand) \
+            "INSERT INTO {} (code, full_name, display_name, description, is_variable, is_green, is_tracker, is_prepay, is_business, is_restricted, term, available_from, available_to, brand) \
                 VALUES (%(code)s, %(full_name)s, %(display_name)s, %(description)s, %(is_variable)s, %(is_green)s, %(is_tracker)s, %(is_prepay)s, %(is_business)s, %(is_restricted)s, %(term)s, %(available_from)s, %(available_to)s, %(brand)s)\
                     ON CONFLICT (code) DO UPDATE \
                         SET code = EXCLUDED.code, \
@@ -116,8 +125,8 @@ def insert_octopus_energy_products(psql_config,
                             available_from = EXCLUDED.available_from, \
                             available_to = EXCLUDED.available_to, \
                             updated = CURRENT_TIMESTAMP, \
-                            brand = EXCLUDED.brand').format(
-                Identifier(table_name))
+                            brand = EXCLUDED.brand"
+        ).format(Identifier(table_name))
         try:
             curr.execute(insert_query, row)
         except psycopg.errors.UniqueViolation:
@@ -126,14 +135,105 @@ def insert_octopus_energy_products(psql_config,
     conn.close()
 
 
-def create_calorific_value_db(psql_config, table_name='calorific_values'):
+def query_tariff_family(psql_config, display_name, brand="OCTOPUS_ENERGY"):
+    query = SQL(
+        "select code, full_name, display_name from products_octopus_energy \
+            where display_name = {} and brand = {}"
+    ).format(Literal(display_name), Literal(brand))
+
+    result = retrive(psql_config, query)
+
+    x = sorted(result, key=lambda d: d[1])
+
+    return x
+
+
+def query_octopus_tariff_by_product_code(psql_config, display_name, energy_type, gsp):
+    query = SQL(
+        "select code, full_name, display_name, available_from, available_to from products_octopus_energy \
+            where code = {} and brand = 'OCTOPUS_ENERGY'"
+    ).format(Literal(display_name))
+
+    return prep_octopus_results(psql_config, query, energy_type, gsp)
+
+
+def query_octopus_tariff_by_family(psql_config, display_name, energy_type, gsp):
+    query = SQL(
+        "select code, full_name, display_name, available_from, available_to from products_octopus_energy \
+            where display_name = {} and brand = 'OCTOPUS_ENERGY'"
+    ).format(Literal(display_name))
+
+    return prep_octopus_results(psql_config, query, energy_type, gsp)
+
+
+def prep_octopus_results(psql_config, query, energy_type, gsp):
+    result = retrive(psql_config, query)
+
+    x = sorted(result, key=lambda d: d[3])
+
+    if energy_type == "electricity":
+        prefix = "E-1R-"
+    else:
+        prefix = "G-1R-"
+
+    tariff_list = []
+    for index, item in enumerate(x):
+
+        if len(x) == index + 1:
+            valid_to = item[4]
+        else:
+            valid_to = x[index + 1][3]
+
+        tariff_list.append(
+            {
+                "name": item[2],
+                "tariff": item[0],
+                "tariff_code": prefix + item[0] + "-" + gsp,
+                "valid_from": item[3],
+                "valid_to": valid_to,
+            }
+        )
+
+    return tariff_list
+
+
+def query_octopus_unique_tariff_families(
+    psql_config, brand="OCTOPUS_ENERGY", table_name="products_octopus_energy"
+):
+    query = SQL(
+        "select DISTINCT(display_name) from {} where brand = {} order by display_name"
+    ).format(Identifier(table_name), Literal(brand))
+
+    response = retrive(psql_config, query)
+    return [name[0] for name in response]
+
+
+def query_existing_tables(psql_config):
+    query = SQL(
+        "SELECT tablename FROM pg_catalog.pg_tables where tablename like '%rates' or tablename like '%charges'"
+    )
+    result = retrive(psql_config, query)
+    try:
+        r = [
+            table[0]
+            .replace("_standing_charges", "")
+            .replace("_standard_unit_rates", "")
+            for table in result
+        ]
+    except IndexError:
+        r = None
+    return r
+
+
+def create_calorific_value_db(psql_config, table_name="calorific_values"):
 
     conn = psycopg.connect(**psql_config)
     curr = conn.cursor()
 
     try:
         curr.execute(
-            SQL("""
+            SQL(
+                """
             CREATE TABLE {} (
                 id serial PRIMARY KEY,
                 applicable_date timestamptz unique not null,
@@ -141,7 +241,9 @@ def create_calorific_value_db(psql_config, table_name='calorific_values'):
                 calorific_value numeric not null,
                 unique (applicable_date, exit_zone)
              )
-            """).format(Identifier(table_name)))
+            """
+            ).format(Identifier(table_name))
+        )
 
     except psycopg.errors.DuplicateTable:
         pass
@@ -149,19 +251,19 @@ def create_calorific_value_db(psql_config, table_name='calorific_values'):
     conn.close()
 
 
-def insert_calorific(psql_config, results, table_name='calorific_values'):
+def insert_calorific(psql_config, results, table_name="calorific_values"):
 
     conn = psycopg.connect(**psql_config)
     curr = conn.cursor()
 
     for row in results:
-        #extracts the LDZ code from the string i.e. 'NW' and replaces it back into the row
-        row[2] = re.findall(r'(?:Calorific Value, LDZ\()(\w+)[\)]', row[2])[0]
+        # extracts the LDZ code from the string i.e. 'NW' and replaces it back into the row
+        row[2] = re.findall(r"(?:Calorific Value, LDZ\()(\w+)[\)]", row[2])[0]
         insert_query = SQL(
-            'INSERT INTO {} (applicable_date, exit_zone, calorific_value) \
+            "INSERT INTO {} (applicable_date, exit_zone, calorific_value) \
                 VALUES (%s, %s, %s)\
                     ON CONFLICT (applicable_date, exit_zone) DO UPDATE \
-                        SET calorific_value = EXCLUDED.calorific_value'
+                        SET calorific_value = EXCLUDED.calorific_value"
         ).format(Identifier(table_name))
         try:
             curr.execute(insert_query, row[1:4])
@@ -171,10 +273,7 @@ def insert_calorific(psql_config, results, table_name='calorific_values'):
     conn.close()
 
 
-def query_missing_calorific(psql_config,
-                            date,
-                            ldz,
-                            table_name='calorific_values'):
+def query_missing_calorific(psql_config, date, ldz, table_name="calorific_values"):
 
     query = SQL(
         "SELECT * FROM generate_series({}, CURRENT_DATE, interval '1 day') AS dates WHERE dates NOT IN (SELECT applicable_date FROM {} where exit_zone = {}) LIMIT 1"
@@ -188,25 +287,30 @@ def query_missing_calorific(psql_config,
         return date
 
 
-def create_consumption_db(psql_config, table_name='consumption'):
+def create_consumption_db(psql_config, table_name="consumption"):
 
     conn = psycopg.connect(**psql_config)
     curr = conn.cursor()
 
     try:
         curr.execute(
-            SQL("""
+            SQL(
+                """
             CREATE TABLE {} (
                 id serial PRIMARY KEY,
                 consumption numeric not null,
                 interval_start timestamptz not null,
                 interval_end timestamptz not null,
                 unique (interval_start, interval_end)
-                )""").format(Identifier(table_name)))
+                )"""
+            ).format(Identifier(table_name))
+        )
 
         curr.execute(
-            SQL("create index on {} using gist (tstzrange(interval_start,interval_end))"
-                ).format(Identifier(table_name)))
+            SQL(
+                "create index on {} using gist (tstzrange(interval_start,interval_end))"
+            ).format(Identifier(table_name))
+        )
 
     except psycopg.errors.DuplicateTable:
         pass
@@ -214,18 +318,18 @@ def create_consumption_db(psql_config, table_name='consumption'):
     conn.close()
 
 
-def insert_consumption(psql_config, results, table_name='consumption'):
+def insert_consumption(psql_config, results, table_name="consumption"):
 
     conn = psycopg.connect(**psql_config)
     curr = conn.cursor()
 
     for item in results:
         insert_query = SQL(
-            'INSERT INTO {} (consumption, interval_start, interval_end) \
+            "INSERT INTO {} (consumption, interval_start, interval_end) \
                 VALUES (%(consumption)s, %(interval_start)s, %(interval_end)s)\
                     ON CONFLICT (interval_start, interval_end) DO UPDATE \
-                        SET consumption = EXCLUDED.consumption').format(
-                Identifier(table_name))
+                        SET consumption = EXCLUDED.consumption"
+        ).format(Identifier(table_name))
         try:
             curr.execute(insert_query, item)
         except psycopg.errors.UniqueViolation:
@@ -234,13 +338,14 @@ def insert_consumption(psql_config, results, table_name='consumption'):
     conn.close()
 
 
-def create_unit_rates_db(psql_config, table_name='unit_rates'):
+def create_unit_rates_db(psql_config, table_name="unit_rates"):
 
     conn = psycopg.connect(**psql_config)
     curr = conn.cursor()
     try:
         curr.execute(
-            SQL("""
+            SQL(
+                """
                 CREATE TABLE {} (
                     id serial PRIMARY KEY,
                     value_inc_vat numeric not null,
@@ -249,11 +354,15 @@ def create_unit_rates_db(psql_config, table_name='unit_rates'):
                     valid_to timestamptz,
                     payment_method char(16),
                     unique nulls not distinct (valid_from, payment_method)
-                )""").format(Identifier(table_name)))
+                )"""
+            ).format(Identifier(table_name))
+        )
 
         curr.execute(
-            SQL("create index on {} using gist (tstzrange(valid_from,valid_to))"
-                ).format(Identifier(table_name)))
+            SQL(
+                "create index on {} using gist (tstzrange(valid_from,valid_to))"
+            ).format(Identifier(table_name))
+        )
 
     except psycopg.errors.DuplicateTable:
         pass
@@ -261,19 +370,19 @@ def create_unit_rates_db(psql_config, table_name='unit_rates'):
     conn.close()
 
 
-def insert_unit_rates(psql_config, results, table_name='unit_rates'):
+def insert_unit_rates(psql_config, results, table_name="unit_rates"):
     conn = psycopg.connect(**psql_config)
     curr = conn.cursor()
 
     for item in results:
         insert_query = SQL(
-            'INSERT INTO {} (value_inc_vat, value_exc_vat, valid_from, valid_to, payment_method) \
+            "INSERT INTO {} (value_inc_vat, value_exc_vat, valid_from, valid_to, payment_method) \
                 VALUES (%(value_inc_vat)s, %(value_exc_vat)s, %(valid_from)s, %(valid_to)s, %(payment_method)s)\
                     ON CONFLICT (valid_from, payment_method) DO UPDATE \
                         SET value_inc_vat = EXCLUDED.value_inc_vat, \
                             value_exc_vat = EXCLUDED.value_exc_vat, \
-                                    valid_to = EXCLUDED.valid_to').format(
-                Identifier(table_name))
+                                    valid_to = EXCLUDED.valid_to"
+        ).format(Identifier(table_name))
 
         try:
             curr.execute(insert_query, item)
@@ -287,7 +396,7 @@ def drop_table(psql_config, table_name):
 
     conn = psycopg.connect(**psql_config)
     curr = conn.cursor()
-    curr.execute(SQL('drop table if exists {}').format(Identifier(table_name)))
+    curr.execute(SQL("drop table if exists {}").format(Identifier(table_name)))
 
     conn.close()
 
@@ -295,7 +404,7 @@ def drop_table(psql_config, table_name):
 def count(psql_config, table_name):
     conn = psycopg.connect(**psql_config)
     curr = conn.cursor()
-    query = SQL('select count(id) from {}').format(Identifier(table_name))
+    query = SQL("select count(id) from {}").format(Identifier(table_name))
     curr.execute(query)
     result = curr.fetchone()
     conn.close()
@@ -309,6 +418,7 @@ def retrive(psql_config, query, params=None):
 
     try:
         curr.execute(query, params)
+        # print(query.as_string(curr))
     except psycopg.errors.UndefinedTable:
         raise ValueError
 
@@ -320,24 +430,22 @@ def retrive(psql_config, query, params=None):
 def retrive_consumption(psql_config, table_name, from_date, to_date):
 
     query = SQL(
-        'select consumption, interval_start, interval_end from {} where interval_start >= {} and interval_start < {}'  #(interval_start between {} and {})
+        "select consumption, interval_start, interval_end from {} where interval_start >= {} and interval_start < {}"  # (interval_start between {} and {})
     ).format(Identifier(table_name), from_date, to_date)
 
     return retrive(psql_config, query)
 
 
-def retrive_unit_rates(psql_config, table_name, payment_method, from_date,
-                       to_date):
+def retrive_unit_rates(psql_config, table_name, payment_method, from_date, to_date):
 
     query = SQL(
-        'select value_exc_vat, valid_from, valid_to from {} where (payment_method is NULL or payment_method = {}) and (valid_from < {} and (valid_to > {} or valid_to is null))'
+        "select value_exc_vat, valid_from, valid_to from {} where (payment_method is NULL or payment_method = {}) and (valid_from < {} and (valid_to > {} or valid_to is null))"
     ).format(Identifier(table_name), payment_method, to_date, from_date)
 
     return retrive(psql_config, query)
 
 
-def query_calorific_values(psql_config, table_name, exit_zone, from_date,
-                           to_date):
+def query_calorific_values(psql_config, table_name, exit_zone, from_date, to_date):
 
     query = SQL(
         "select calorific_value as value_exc_vat, applicable_date as valid_from, applicable_date + interval '1' day as valid_to from {} where exit_zone = {} and applicable_date >= {} and applicable_date < {}"
@@ -351,54 +459,10 @@ def query_calorific_values(psql_config, table_name, exit_zone, from_date,
     return retrive(psql_config, query)
 
 
-def query_octopus_tariff_family(psql_config, display_name, energy_type, gsp):
-    query = SQL(
-        "select code, full_name, display_name, available_from, available_to from products_octopus_energy \
-            where display_name = {} and brand = 'OCTOPUS_ENERGY'").format(
-            Literal(display_name))
-
-    result = retrive(psql_config, query)
-
-    x = sorted(result, key=lambda d: d[3])
-
-    if energy_type == 'electricity':
-        prefix = 'E-1R-'
-    else:
-        prefix = 'G-1R-'
-
-    tariff_list = []
-    for index, item in enumerate(x):
-
-        if len(x) == index + 1:
-            valid_to = item[4]
-        else:
-            valid_to = x[index + 1][3]
-
-        tariff_list.append({
-            "name": item[2],
-            "tariff": item[0],
-            "tariff_code": prefix + item[0] + '-' + gsp,
-            "valid_from": item[3],
-            "valid_to": valid_to
-        })
-
-    return tariff_list
-
-
-def query_octopus_unique_tariff_families(psql_config,
-                                         table_name='products_octopus_energy'):
-    query = SQL(
-        "select DISTINCT(display_name) from {} where brand = 'OCTOPUS_ENERGY' order by display_name"
-    ).format(Identifier(table_name))
-
-    result = retrive(psql_config, query)
-    r = [x[0] for x in result]
-    return r
-
-
-def query_ldz(psql_config, postcode, table_name='LDZ'):
+def query_ldz(psql_config, postcode, table_name="LDZ"):
     query = SQL("select ldz from {} where postcode = {} limit 1").format(
-        Identifier(table_name), Literal(postcode))
+        Identifier(table_name), Literal(postcode)
+    )
     result = retrive(psql_config, query)
     try:
         r = result[0][0]
