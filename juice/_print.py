@@ -37,6 +37,8 @@ def print_method(self, name, from_date, to_date, energy_type=None):
 
 def print_cost(method, from_date, to_date):
 
+    energy_type = None
+
     data = method["dataframe"]
 
     name = method["name"]
@@ -80,7 +82,8 @@ def print_cost(method, from_date, to_date):
 
     try:
         print(extracted_naive["calorific_value"].mean().round(1))
-        print(extracted_naive["calorific_value"].mean().round(1))
+        use_gas_units = extracted_aware["consumption_units"].sum().round(1)
+        energy_type = "gas"
     except KeyError:
         pass
 
@@ -98,7 +101,12 @@ def print_cost(method, from_date, to_date):
     total = (subtotal + vat).round(2)
 
     table = PrettyTable([name, "Consumption", "Cost"])
-    table.add_row(["Total consumption", f"{use}kWh", format_pound(cost_rate)])
+    if energy_type == "gas":
+        consumption_row = f"{use} kWh ({use_gas_units} m³)"
+    else:
+        consumption_row = f"{use}kWh"
+
+    table.add_row(["Total consumption", consumption_row, format_pound(cost_rate)])
     table.add_row(["Standing charge", format_days(days), format_pound(cost_standing)])
     table.add_row(["Subtotal", "", format_pound(subtotal)])
     table.add_row(["Vat at 5%", "", format_pound(vat)], divider=True)

@@ -146,6 +146,7 @@ def calc_costs(dataframes, energy_type):
 
         if energy_type == "gas":
             a["calorific_value"] = data["calorific_values"]
+            a["consumption_units"] = a["consumption"].round(2)
             a["consumption_rounded"] = (
                 a["consumption"] * np.float64(1.02264) * a["calorific_value"]
             ) / np.float64(3.6)
