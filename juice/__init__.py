@@ -51,16 +51,10 @@ class Juice:
 
         self.calcs = {
             'gas': {
-                'consumption_dbs': None,
                 'methods': [],
-                '_calorific_values': [],
-                'energy_type': 'gas'
             },
             'electricity': {
-                'consumption_dbs': None,
                 'methods': [],
-                '_calorific_values': [],
-                'energy_type': 'electricity'
             }
         }
 

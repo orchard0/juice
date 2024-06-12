@@ -117,7 +117,7 @@ def combined(info):
                 on="from",
             )
             df.rename(columns={"rate": "calorific_values"}, inplace=True)
-        except ValueError:
+        except KeyError:
             pass
 
         method["dataframe"] = df
@@ -128,7 +128,7 @@ def combined(info):
     return result
 
 
-def calc_costs(dataframes):
+def calc_costs(dataframes, energy_type):
     data_in = combined(dataframes)
     result = data_in.copy()
 
@@ -144,7 +144,7 @@ def calc_costs(dataframes):
 
         a = pd.DataFrame(data[["from", "to", "consumption"]])
 
-        if result["energy_type"] == "gas":
+        if energy_type == "gas":
             a["calorific_value"] = data["calorific_values"]
             a["consumption_rounded"] = (
                 a["consumption"] * np.float64(1.02264) * a["calorific_value"]
@@ -181,7 +181,7 @@ def calc_costs(dataframes):
 
 
 @staticmethod
-def run_config(psql_config, data, from_date, to_date, LDZ=None):
+def run_config(psql_config, data, energy_type, from_date, to_date, LDZ=None):
 
     print(
         "Getting consumption figures from",
@@ -196,7 +196,6 @@ def run_config(psql_config, data, from_date, to_date, LDZ=None):
     )
 
     print("Total rows for consumption:", consumption_df.shape[0])
-    energy_type = data["energy_type"]
 
     if energy_type == "gas":
         if not LDZ:
@@ -206,7 +205,7 @@ def run_config(psql_config, data, from_date, to_date, LDZ=None):
         joined = join(
             psql_config, "calorific_values", consumption_df, from_date, to_date, LDZ
         )
-        data["_calorific_values"].append(joined)
+        data["_calorific_values"] = [joined]
 
     for method in data["methods"]:
         agreements = sorted(method["agreements"], key=lambda d: d["valid_from"])
@@ -237,7 +236,7 @@ def run_config(psql_config, data, from_date, to_date, LDZ=None):
 
     return {
         **data,
-        "dataframe": calc_costs(data),
+        "dataframe": calc_costs(data, energy_type),
         "from_date": from_date,
         "to_date": to_date,
     }
@@ -290,4 +289,6 @@ def calculate(self, from_date=None, to_date=None, energy_type=None):
 
     check_method_dates(data["methods"], from_date, to_date)
 
-    data = self.run_config(self.psql_config, data, from_date, to_date, self.LDZ)
+    data = self.run_config(
+        self.psql_config, data, energy_type, from_date, to_date, self.LDZ
+    )
