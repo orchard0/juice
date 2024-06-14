@@ -219,7 +219,8 @@ def query_octopus_unique_tariff_families(
     return [name[0] for name in response]
 
 
-def query_existing_tables(psql_config):
+@staticmethod
+def query_existing_products_tables(psql_config):
     query = SQL(
         "SELECT tablename FROM pg_catalog.pg_tables where tablename like '%rates' or tablename like '%charges'"
     )
@@ -231,6 +232,8 @@ def query_existing_tables(psql_config):
             .replace("_standard_unit_rates", "")
             for table in result
         ]
+        r = set(r)
+        r = [{"tariff_code": code} for code in r]
     except IndexError:
         r = None
     return r
