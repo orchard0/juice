@@ -1,3 +1,47 @@
-OCOTPUS_API_BASE_URL = 'https://api.octopus.energy/v1'
+OCOTPUS_API_BASE_URL = "https://api.octopus.energy/v1"
 PAGE_SIZE = 150
 UPDATE_INTERVAL = 3
+
+OCTOPUS_SMART_TARIFF_FAMILIES = [
+    "Agile Octopus",
+    "Octopus Go",
+    "Intelligent Octopus Go",
+    "Cosy Octopus",
+    "Octopus Tracker",
+    "Octopus Flux Import",
+    "Intelligent Octopus Flux Import",
+    # "Octopus Go Green",
+]
+
+OCTOPUS_DEFAULT_TARIFF_FAMILY = ["Flexible Octopus"]
+
+AGILE_OCTOPUS = [
+    "AGILE-18-02-21",
+    "AGILE-22-07-22",
+    "AGILE-22-08-31",
+    "AGILE-VAR-22-10-19",
+    "AGILE-FLEX-22-11-25",
+    "AGILE-23-12-06",
+    "AGILE-24-04-03",
+]
+OCTOPUS_GO = ["GO-VAR-22-10-14"]
+INTELLIGENT_OCTOPUS_GO = ["INTELLI-VAR-22-10-14"]
+COSY_OCTOPUS = ["COSY-22-12-08"]
+OCTOPUS_TRACKER = [
+    "SILVER-2017-1",
+    "SILVER-FLEX-22-11-25",
+    "SILVER-23-12-06",
+    "SILVER-24-04-03",
+]
+OCTOPUS_FLUX_IMPORT = ["FLUX-IMPORT-23-02-14"]
+INTELLIGENT_OCTOPUS_FLUX_IMPORT = ["INTELLI-FLUX-IMPORT-23-07-14"]
+
+OCTOPUS_SMART_TARIFF_PRODUCT_CODES = (
+    AGILE_OCTOPUS
+    + OCTOPUS_GO
+    + INTELLIGENT_OCTOPUS_GO
+    + COSY_OCTOPUS
+    + OCTOPUS_TRACKER
+    + OCTOPUS_FLUX_IMPORT
+    + INTELLIGENT_OCTOPUS_FLUX_IMPORT
+)
