@@ -1,5 +1,8 @@
-from datetime import datetime, timezone
+from datetime import datetime
+from prettytable import PrettyTable
 import math
+from pytz import timezone
+from psycopg import DatabaseError
 from ._psql import query_calorific_values, retrive_unit_rates, retrive_consumption
 from ._utils import parse_date, format_date
 import pandas as pd
@@ -75,9 +78,9 @@ def join(psql_config, dbname, dataframe, from_date, to_date, LDZ=None):
     return filtered_by_dates
 
 
-def combined(info):
+def merge_dataframes(methods):
 
-    result = info.copy()
+    result = methods.copy()
 
     methods_del = []
     for index, method in enumerate(result["methods"]):
@@ -85,8 +88,8 @@ def combined(info):
         data = method["cost_types"]
 
         try:
-            ur = pd.concat(data["_standard_unit_rates"]).sort_values("from")
-            sc = pd.concat(data["_standing_charges"]).sort_values("from")
+            ur = data["_standard_unit_rates"]
+            sc = data["_standing_charges"]
             df = pd.merge(ur, sc[["rate", "from"]], on="from")
             new_column_names = {
                 "rate_x": method["name"] + "_unit_rate",
@@ -96,7 +99,7 @@ def combined(info):
             df.rename(columns=new_column_names, inplace=True)
         except KeyError as e:
             if e.args[0] == "_standard_unit_rates":
-                df = pd.concat(data["_standing_charges"]).sort_values("from")
+                df = data["_standing_charges"]
                 new_column_names = {"rate": method["name"] + "_standing_charge"}
                 df.rename(columns=new_column_names, inplace=True)
             elif e.args[0] == "_standing_charges":
@@ -109,7 +112,7 @@ def combined(info):
             continue
 
         try:
-            cv = pd.concat(result["_calorific_values"]).sort_values("from")
+            cv = result["_calorific_values"]
 
             df = pd.merge(
                 df,
@@ -129,7 +132,7 @@ def combined(info):
 
 
 def calc_costs(dataframes, energy_type):
-    data_in = combined(dataframes)
+    data_in = merge_dataframes(dataframes)
     result = data_in.copy()
 
     for method in result["methods"]:
@@ -184,6 +187,22 @@ def calc_costs(dataframes, energy_type):
 @staticmethod
 def run_config(psql_config, data, energy_type, from_date, to_date, LDZ=None):
 
+    def min_max_dates_and_size_check(data, name, consumption_size):
+        min_date = utc.localize(data["from"].min().to_pydatetime())
+        max_date = utc.localize(data["to"].max().to_pydatetime())
+
+        if not (
+            min_date <= from_date
+            and max_date >= to_date
+            and consumption_size == data.shape[0]
+        ):
+            missing_days = abs((min_date - from_date).days + (max_date - to_date).days)
+            raise DatabaseError(
+                f"There is {missing_days} day(s) of missing data for {name}. The data was available from {format_date(min_date)} to {format_date(max_date)}. The required range is {format_date(from_date)} to {format_date(to_date)}. Is the database up to date? Try running update()."
+            )
+
+    utc = timezone("UTC")
+
     print(
         "Getting consumption figures from",
         format_date(from_date),
@@ -194,7 +213,10 @@ def run_config(psql_config, data, energy_type, from_date, to_date, LDZ=None):
     consumption_df = pd.concat(
         get_consumption(psql_config, dbname, from_date, to_date)
         for dbname in data["consumption_dbs"]
-    )
+    ).sort_values("from")
+
+    consumption_size = consumption_df.shape[0]
+    min_max_dates_and_size_check(consumption_df, "consumption", consumption_size)
 
     print("Total rows for consumption:", consumption_df.shape[0])
 
@@ -203,20 +225,24 @@ def run_config(psql_config, data, energy_type, from_date, to_date, LDZ=None):
             raise ValueError(
                 "LDZ was not found for the property. Please add it manually in the Juice constructor."
             )
-        joined = join(
+        data["_calorific_values"] = join(
             psql_config, "calorific_values", consumption_df, from_date, to_date, LDZ
+        ).sort_values("from")
+        min_max_dates_and_size_check(
+            data["_calorific_values"], "calorific values", consumption_size
         )
-        data["_calorific_values"] = [joined]
 
     for method in data["methods"]:
         agreements = sorted(method["agreements"], key=lambda d: d["valid_from"])
 
         print("Calculating", method["name"])
-        for agreement in agreements:
-            if agreement["valid_from"] == agreement["valid_to"]:
-                continue
+        for cost_type in method["cost_types"]:
 
-            for cost_type in method["cost_types"]:
+            tables = []
+
+            for agreement in agreements:
+                if agreement["valid_from"] == agreement["valid_to"]:
+                    continue
 
                 tariff_code = agreement["tariff_code"] + cost_type
 
@@ -231,9 +257,15 @@ def run_config(psql_config, data, energy_type, from_date, to_date, LDZ=None):
                         psql_config, tariff_code, consumption_df, valid_from, valid_to
                     )
 
-                    method["cost_types"][cost_type].append(joined)
+                    tables.append(joined)
                 except ValueError:
                     continue
+
+            method["cost_types"][cost_type] = pd.concat(tables).sort_values("from")
+            # print(method["cost_types"][cost_type])
+            min_max_dates_and_size_check(
+                method["cost_types"][cost_type], method["name"], consumption_size
+            )
 
     return {
         **data,
@@ -257,9 +289,9 @@ def calculate(self, from_date=None, to_date=None, energy_type=None):
         from_date = self.MOVED_IN_AT
 
     if to_date:
-        to_date = parse_date(to_date, 1)
+        to_date = parse_date(to_date)
     else:
-        to_date = parse_date(add=1)
+        to_date = parse_date(add=-1)
 
     if from_date > to_date:
         raise ValueError(
@@ -269,27 +301,50 @@ def calculate(self, from_date=None, to_date=None, energy_type=None):
     data["from_date"] = from_date
     data["to_date"] = to_date
 
-    def check_method_dates(data, from_date, to_date):
-
-        for method in data:
-            method_from_date = method["from_date"]
-            method_to_date = method["to_date"]
-            method_to_date_display = method_to_date
-            if not method_to_date:
-                method_to_date = datetime(3000, 1, 1, tzinfo=timezone.utc)
-                method_to_date_display = math.inf
-            if not (
-                from_date <= method_to_date
-                and to_date >= method_from_date
-                and from_date >= method_from_date
-                and to_date <= method_to_date
-            ):
-                raise ValueError(
-                    f"The calculation's date range {format_date(from_date)} to {format_date(to_date)} do not fall within {method['name']}'s date range {format_date(method_from_date)} to {format_date(method_to_date_display)}"
-                )
-
     check_method_dates(data["methods"], from_date, to_date)
 
     data = self.run_config(
         self.psql_config, data, energy_type, from_date, to_date, self.LDZ
     )
+
+
+def check_method_dates(data, from_date, to_date):
+    """ """
+
+    invalid_methods = []
+    utc = timezone("utc")
+    earliest_date = utc.localize(datetime(1900, 1, 1))
+
+    for method in data:
+        method_from_date = method["from_date"]
+        method_to_date = method["to_date"]
+        method_to_date_display = method_to_date
+        if not method_to_date:
+            method_to_date = utc.localize(datetime(3000, 1, 1))
+            method_to_date_display = math.inf
+        if not (
+            from_date <= method_to_date
+            and to_date >= method_from_date
+            and from_date >= method_from_date
+            and to_date <= method_to_date
+        ):
+            if method_from_date > earliest_date:
+                earliest_date = method_from_date
+            invalid_methods.append(
+                {
+                    "name": method["name"],
+                    "from": format_date(method_from_date),
+                    "to": format_date(method_to_date_display),
+                }
+            )
+
+    invalid_methods = sorted(invalid_methods, key=lambda d: d["from"])
+    if invalid_methods:
+        table = PrettyTable(["Method", "from", "to"])
+
+        main_msg = f"The calculation's date range {format_date(from_date)} to {format_date(to_date)} does not fall within the following method(s) date range(s):\n"
+        earliest_date_msg = f"\nThe earliest calculation date is {format_date(earliest_date)}. Either remove the offending method(s) or change the calculation dates."
+        for invalid in invalid_methods:
+            table.add_row([invalid["name"], invalid["from"], invalid["to"]])
+
+        raise ValueError(main_msg + str(table) + earliest_date_msg)
