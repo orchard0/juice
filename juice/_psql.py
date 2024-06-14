@@ -1,6 +1,6 @@
 from datetime import datetime
 import psycopg
-from psycopg.sql import SQL, Identifier, Literal
+from psycopg.sql import SQL, Identifier, Literal, Composed
 import re
 
 
@@ -168,7 +168,7 @@ def query_octopus_product_by_product_code(psql_config, display_name, energy_type
     return prep_octopus_results(psql_config, query, energy_type, gsp)
 
 
-def query_octopus_tariff_by_family(psql_config, display_name, energy_type, gsp):
+def query_octopus_product_by_family_name(psql_config, display_name, energy_type, gsp):
     query = SQL(
         "select code, full_name, display_name, available_from, available_to from products_octopus_energy \
             where display_name = {} and brand = 'OCTOPUS_ENERGY'"
@@ -208,7 +208,7 @@ def prep_octopus_results(psql_config, query, energy_type, gsp):
     return tariff_list
 
 
-def query_octopus_unique_tariff_families(
+def query_octopus_unique_tariff_family(
     psql_config, brand="OCTOPUS_ENERGY", table_name="products_octopus_energy"
 ):
     query = SQL(
