@@ -126,6 +126,9 @@ def print_compare(self, from_date=None, to_date=None, energy_type=None):
     data = self.calcs[energy_type]
 
     if from_date and to_date:
+        from_date = parse_date(from_date)
+        to_date = parse_date(to_date, 1)
+
         from_date = pd.to_datetime(from_date).to_datetime64()
         to_date = pd.to_datetime(to_date).to_datetime64()
 
