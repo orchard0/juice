@@ -4,19 +4,27 @@ import numpy as np
 from ._utils import parse_date, format_date
 
 
-def print_bill(self, from_date, to_date, energy_type=None):
+def print_bill(self, from_date=None, to_date=None, energy_type=None):
 
     self.print_method("Bill", from_date, to_date, energy_type)
 
 
-def print_method(self, name, from_date, to_date, energy_type=None):
+def print_method(self, name, from_date=None, to_date=None, energy_type=None):
 
     if energy_type is None:
         energy_type = self.energy_type
     self.check_energy_type_input(energy_type)
 
-    from_date = parse_date(from_date)
-    to_date = parse_date(to_date, 1)
+
+    if from_date:
+        from_date = parse_date(from_date)
+    else:
+        from_date = self.MOVED_IN_AT
+
+    if to_date:
+        to_date = parse_date(to_date, 1)
+    else:
+        to_date = parse_date(add=-1)
 
     data = self.calcs[energy_type]
     calcs_from_date = data["from_date"]
@@ -125,12 +133,31 @@ def print_compare(self, from_date=None, to_date=None, energy_type=None):
 
     data = self.calcs[energy_type]
 
-    if from_date and to_date:
+    if from_date:
         from_date = parse_date(from_date)
-        to_date = parse_date(to_date, 1)
+    else:
+        from_date = self.MOVED_IN_AT
 
-        from_date = pd.to_datetime(from_date).to_datetime64()
-        to_date = pd.to_datetime(to_date).to_datetime64()
+    if to_date:
+        to_date = parse_date(to_date, 1)
+    else:
+        to_date = parse_date(add=-1)
+
+    from_date = pd.to_datetime(from_date).to_datetime64()
+    to_date = pd.to_datetime(to_date).to_datetime64()
+
+    from_date = (
+        pd.to_datetime(from_date)
+        .tz_localize("Europe/London")
+        .tz_convert("UTC")
+        .to_datetime64()
+    )
+    to_date = (
+        pd.to_datetime(to_date)
+        .tz_localize("Europe/London")
+        .tz_convert("UTC")
+        .to_datetime64()
+    )
 
     names = []
     totals = []
@@ -146,8 +173,7 @@ def print_compare(self, from_date=None, to_date=None, energy_type=None):
         name = method["name"]
         names.append(name)
 
-        if from_date and to_date:
-            datax = datax.loc[(datax["from"] >= from_date) & (datax["from"] < to_date)]
+        datax = datax.loc[(datax["from"] >= from_date) & (datax["from"] < to_date)]
         total = datax[name + "_total"].sum() * np.float64(1.05)
         totals.append(total)
 
