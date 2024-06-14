@@ -1,10 +1,10 @@
-from datetime import datetime, timedelta, timezone
-from pytz import timezone as pytzTimezone
+from datetime import datetime, timedelta
+from pytz import timezone
 
 
 def parse_date(date=None, add=0):
 
-    utc = pytzTimezone("UTC")
+    utc = timezone("UTC")
 
     if not date:
         result = utc.localize(datetime.now()).replace(
@@ -27,7 +27,8 @@ def parse_date(date=None, add=0):
 
 
 def format_date(date):
+    london = timezone("Europe/London")
     if isinstance(date, float):
         return "Infinity"
     else:
-        return date.strftime("%Y-%m-%d")
+        return date.astimezone(london).strftime("%Y-%m-%d")
