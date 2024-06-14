@@ -148,7 +148,18 @@ def query_tariff_family(psql_config, display_name, brand="OCTOPUS_ENERGY"):
     return x
 
 
-def query_octopus_tariff_by_product_code(psql_config, display_name, energy_type, gsp):
+def query_octopus_product_not_in_database(psql_config, products_list):
+
+    s = Composed(SQL("({})").format(Literal(n)) for n in products_list)
+
+    query = SQL(
+        "values {} except select distinct(code) from products_octopus_energy"
+    ).format(s.join(", "))
+
+    return [x[0] for x in retrive(psql_config, query)]
+
+
+def query_octopus_product_by_product_code(psql_config, display_name, energy_type, gsp):
     query = SQL(
         "select code, full_name, display_name, available_from, available_to from products_octopus_energy \
             where code = {} and brand = 'OCTOPUS_ENERGY'"
