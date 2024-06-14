@@ -214,9 +214,12 @@ def get_consumption(
 
 
 @staticmethod
-def get_tariffs(
-    psql_config, energy_type, tariff_code, force_refresh=False, headers=None
-):
+def get_tariffs(psql_config, tariff_code, force_refresh=False, headers=None):
+
+    if "G-1R" in tariff_code:
+        energy_type = "gas"
+    else:
+        energy_type = "electricity"
 
     for type in ["standard-unit-rates", "standing-charges"]:
 
