@@ -107,7 +107,7 @@ def merge_dataframes(methods):
                 new_column_names = {"rate": method["name"] + "_unit_rate"}
                 df.rename(columns=new_column_names, inplace=True)
 
-        except ValueError:
+        except (ValueError, TypeError):
             methods_del.append(method)
             continue
 
@@ -261,11 +261,15 @@ def run_config(psql_config, data, energy_type, from_date, to_date, LDZ=None):
                 except ValueError:
                     continue
 
-            method["cost_types"][cost_type] = pd.concat(tables).sort_values("from")
-            # print(method["cost_types"][cost_type])
-            min_max_dates_and_size_check(
-                method["cost_types"][cost_type], method["name"], consumption_size
-            )
+            try:
+                x = pd.concat(tables).sort_values("from")
+                method["cost_types"][cost_type] = x
+                # print(method["cost_types"][cost_type])
+                min_max_dates_and_size_check(
+                    method["cost_types"][cost_type], method["name"], consumption_size
+                )
+            except ValueError:
+                pass
 
     return {
         **data,
