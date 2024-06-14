@@ -1,4 +1,4 @@
-from ._psql import query_octopus_tariff_by_family, query_octopus_tariff_by_product_code
+from ._psql import query_octopus_product_by_family_name, query_octopus_product_by_product_code
 
 def remove_tariff(self, energy_type, name):
 
@@ -14,7 +14,7 @@ def remove_tariff(self, energy_type, name):
         print('removed', name)
 
 
-def add_method_by_tariff_family(self, display_name, energy_type=None):
+def add_method_by_product_family(self, display_name, energy_type=None):
 
     if energy_type is None:
         energy_type = self.energy_type
@@ -22,10 +22,10 @@ def add_method_by_tariff_family(self, display_name, energy_type=None):
 
     if isinstance(display_name, list):
         for dn in display_name:
-            tariffs = query_octopus_tariff_by_family(self.psql_config, dn, energy_type, self.GSP)
+            tariffs = query_octopus_product_by_family_name(self.psql_config, dn, energy_type, self.GSP)
             self.add_method(energy_type, dn, tariffs)
     elif isinstance(display_name, str):
-        tariffs = query_octopus_tariff_by_family(self.psql_config, display_name, energy_type, self.GSP)
+        tariffs = query_octopus_product_by_family_name(self.psql_config, display_name, energy_type, self.GSP)
         self.add_method(energy_type, display_name, tariffs)
     pass
 
@@ -37,10 +37,10 @@ def add_method_by_product_code(self, product_code, energy_type=None):
 
     if isinstance(product_code, list):
         for dn in product_code:
-            tariffs = query_octopus_tariff_by_product_code(self.psql_config, dn, energy_type, self.GSP)
+            tariffs = query_octopus_product_by_product_code(self.psql_config, dn, energy_type, self.GSP)
             self.add_method(energy_type, dn, tariffs)
     elif isinstance(product_code, str):
-        tariffs = query_octopus_tariff_by_product_code(self.psql_config, product_code, energy_type, self.GSP)
+        tariffs = query_octopus_product_by_product_code(self.psql_config, product_code, energy_type, self.GSP)
         self.add_method(energy_type, product_code, tariffs)
     pass
 
