@@ -164,8 +164,12 @@ def print_compare(self, from_date=None, to_date=None, energy_type=None):
     totals_in = (totals_np / 100).round(2)
     totals_df = pd.DataFrame(totals_in, index=names, columns=["Total (£)"])
 
+    totals_df_rows = pd.DataFrame(datax.shape[0], index=names, columns=["Rows"])
+
     table = pd.merge(out, totals_df, left_index=True, right_index=True)
-    print(table)
+    table = pd.merge(table, totals_df_rows, left_index=True, right_index=True)
+
+    print(table.sort_values("Total (£)"))
 
     pass
 
