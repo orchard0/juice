@@ -10,14 +10,7 @@ import numpy as np
 import janitor
 
 
-def find_duplicates(table):
-    try:
-        print(pd.concat(g for _, g in table.groupby("from") if len(g) > 1))
-    except ValueError:
-        print("No duplicates found.")
-
-
-def get_consumption(psql_config, dbname, from_date, to_date):
+def _get_consumption(psql_config, dbname, from_date, to_date):
 
     s = retrive_consumption(psql_config, dbname, from_date, to_date)
     if not s:
@@ -29,7 +22,7 @@ def get_consumption(psql_config, dbname, from_date, to_date):
     return r.sort_values("from")
 
 
-def join(psql_config, dbname, dataframe, from_date, to_date, LDZ=None):
+def _join(psql_config, dbname, dataframe, from_date, to_date, LDZ=None):
 
     def get_unit_rates(dbname, from_date, to_date, payment_method="DIRECT_DEBIT"):
 
@@ -78,7 +71,7 @@ def join(psql_config, dbname, dataframe, from_date, to_date, LDZ=None):
     return filtered_by_dates
 
 
-def merge_dataframes(methods):
+def _merge_dataframes(methods):
 
     result = methods.copy()
 
@@ -131,8 +124,8 @@ def merge_dataframes(methods):
     return result
 
 
-def calc_costs(dataframes, energy_type):
-    data_in = merge_dataframes(dataframes)
+def _calc_costs(dataframes, energy_type):
+    data_in = _merge_dataframes(dataframes)
     result = data_in.copy()
 
     for method in result["methods"]:
@@ -185,7 +178,7 @@ def calc_costs(dataframes, energy_type):
 
 
 @staticmethod
-def run_config(psql_config, data, energy_type, from_date, to_date, LDZ=None):
+def _run_config(psql_config, data, energy_type, from_date, to_date, LDZ=None):
 
     def min_max_dates_and_size_check(data, name, consumption_size):
         min_date = utc.localize(data["from"].min().to_pydatetime())
@@ -211,7 +204,7 @@ def run_config(psql_config, data, energy_type, from_date, to_date, LDZ=None):
     )
 
     consumption_df = pd.concat(
-        get_consumption(psql_config, dbname, from_date, to_date)
+        _get_consumption(psql_config, dbname, from_date, to_date)
         for dbname in data["consumption_dbs"]
     ).sort_values("from")
 
@@ -225,7 +218,7 @@ def run_config(psql_config, data, energy_type, from_date, to_date, LDZ=None):
             raise ValueError(
                 "LDZ was not found for the property. Please add it manually in the Juice constructor."
             )
-        data["_calorific_values"] = join(
+        data["_calorific_values"] = _join(
             psql_config, "calorific_values", consumption_df, from_date, to_date, LDZ
         ).sort_values("from")
         min_max_dates_and_size_check(
@@ -253,7 +246,7 @@ def run_config(psql_config, data, energy_type, from_date, to_date, LDZ=None):
                     valid_to = datetime.now()
 
                 try:
-                    joined = join(
+                    joined = _join(
                         psql_config, tariff_code, consumption_df, valid_from, valid_to
                     )
 
@@ -273,13 +266,24 @@ def run_config(psql_config, data, energy_type, from_date, to_date, LDZ=None):
 
     return {
         **data,
-        "dataframe": calc_costs(data, energy_type),
+        "dataframe": _calc_costs(data, energy_type),
         "from_date": from_date,
         "to_date": to_date,
     }
 
 
-def calculate(self, from_date=None, to_date=None, energy_type=None):
+def calculate(self, from_date: None | str | datetime = None, to_date: None | str | datetime = None, energy_type: None | str = None):
+
+    """
+    Calculate costs for the methods added.
+
+    Args:
+        from_date: A date from which to begin calculations.
+        to_date: A date to which calculate.
+
+    Returns:
+        None
+    """
 
     if energy_type is None:
         energy_type = self.energy_type
@@ -305,15 +309,14 @@ def calculate(self, from_date=None, to_date=None, energy_type=None):
     data["from_date"] = from_date
     data["to_date"] = to_date
 
-    check_method_dates(data["methods"], from_date, to_date)
+    _check_method_dates(data["methods"], from_date, to_date)
 
-    data = self.run_config(
+    data = self._run_config(
         self.psql_config, data, energy_type, from_date, to_date, self.LDZ
     )
 
 
-def check_method_dates(data, from_date, to_date):
-    """ """
+def _check_method_dates(data, from_date, to_date):
 
     invalid_methods = []
     utc = timezone("utc")

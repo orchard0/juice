@@ -16,6 +16,7 @@ ENERGY_TYPES = {"gas", "electricity"}
 
 class Juice:
 
+
     from ._account import (
         set_account_info,
         read_account_json,
@@ -36,7 +37,7 @@ class Juice:
         add_method_by_product_family,
         add_method_by_product_code,
     )
-    from ._bill import run_config, calculate
+    from ._bill import _run_config, calculate
     from ._print import print_bill, print_method, print_compare, print_checks
     from ._psql import query_existing_products_tables
     from ._database import (
