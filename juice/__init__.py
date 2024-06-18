@@ -51,13 +51,33 @@ class Juice:
 
     def __init__(
         self,
-        API_KEY,
-        ACCOUNT_ID,
-        psql_config=None,
-        LDZ=None,
-        energy_type=None,
-        headers=None,
+        API_KEY: str,
+        ACCOUNT_ID: str,
+        psql_config: dict | None = None,
+        LDZ: str | None =None,
+        energy_type: str | None =None,
+        headers: dict | None =None,
     ) -> None:
+        
+        """
+        Juice constructor prepares the account information to carry out calculations and comparisons.
+
+        Examples:
+            >>> account = Juice('api_key', 'A-W235SNT')
+
+        Args:
+            API_KEY: The api key for accessing the Octopus account.
+            ACCOUNT_ID: The account id of the Octopus account.
+            psql_config: A dictionary containing PostgresQL connection settings.
+            LDZ: A string with the account's gas local distribution zone id. It's only need for accounts with gas energy and when a LDZ database has not been configured.
+            energy_type: An energy type to be set for succeeding methods to use.
+            headers: A dictionary containing settings to be passed on to Python Requests library when making network requests. 
+
+        Returns:
+            Juice constructor
+        
+        """
+
         self.create_working_dirs()
 
         if psql_config:
