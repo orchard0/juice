@@ -58,10 +58,10 @@ def add_method_by_product_family(self, family_name: str, energy_type: str | None
     if isinstance(family_name, list):
         for dn in family_name:
             tariffs = query_octopus_product_by_family_name(self.psql_config, dn, energy_type, self.GSP)
-            self.add_method(energy_type, dn, tariffs)
+            self.add_method(dn, tariffs, energy_type)
     elif isinstance(family_name, str):
         tariffs = query_octopus_product_by_family_name(self.psql_config, family_name, energy_type, self.GSP)
-        self.add_method(energy_type, family_name, tariffs)
+        self.add_method(family_name, tariffs, energy_type)
     pass
 
 def add_method_by_product_code(self, product_code: str , energy_type: str | None =None):
@@ -89,10 +89,10 @@ def add_method_by_product_code(self, product_code: str , energy_type: str | None
     if isinstance(product_code, list):
         for dn in product_code:
             tariffs = query_octopus_product_by_product_code(self.psql_config, dn, energy_type, self.GSP)
-            self.add_method(energy_type, dn, tariffs)
+            self.add_method(dn, tariffs, energy_type)
     elif isinstance(product_code, str):
         tariffs = query_octopus_product_by_product_code(self.psql_config, product_code, energy_type, self.GSP)
-        self.add_method(energy_type, product_code, tariffs)
+        self.add_method(product_code, tariffs, energy_type)
     pass
 
 
@@ -125,10 +125,49 @@ def add_bill(self, energy_type=None):
             f"There are were no agreements for {energy_type} found in the account information."
         )
 
-    self.add_method(energy_type, 'Bill', agreements, replace=True)
+    self.add_method('Bill', agreements, energy_type, replace=True)
     pass
 
-def add_method(self, energy_type, name, agreements, replace=False):
+def add_method(self, name: str, tariff_agreements: list, energy_type: str | None = None, replace: bool = False):
+
+    """
+    Add a calculation method using a custom tariff list.
+
+    Examples:
+        >>> custom_list =  [
+          {
+            "tariff_code": "E-1R-VAR-22-10-01-C",
+            "valid_from": "2023-03-17 00:00:00+00:00",
+            "valid_to": "2023-03-18 00:00:00+00:00"
+          },
+          {
+            "tariff_code": "E-1R-AGILE-FLEX-22-11-25-C",
+            "valid_from": "2023-03-18 00:00:00+00:00",
+            "valid_to": "2024-02-15 00:00:00+00:00"
+          },
+           {
+            "tariff_code": "E-1R-INTELLI-VAR-22-10-14-C",
+            "valid_from": "2024-02-15 00:00:00+00:00",
+            "valid_to": None
+          }
+          ]
+        >>> account.add_method('Custom tariff', custom_list)
+
+
+    Args:
+        name: The unique name for this calculation method.
+        tariff_agreements: A custom list of tariff codes with valid from and valid to dates.
+        energy_type: The energy type for which to add this calculation method.
+        replace: Whether to replace an existing calculation method with the same name.
+
+    Returns:
+        None
+        
+    """
+
+    if energy_type is None:
+        energy_type = self.energy_type
+    self.check_energy_type_input(energy_type)
 
     data = self.calcs[energy_type]
 
@@ -147,11 +186,11 @@ def add_method(self, energy_type, name, agreements, replace=False):
 
         return from_date, to_date
 
-    method_from_date, method_to_date = dates_for_method(agreements)
+    method_from_date, method_to_date = dates_for_method(tariff_agreements)
 
     method = {
         'name': name,
-        'agreements': agreements,
+        'agreements': tariff_agreements,
         'from_date': method_from_date,
         'to_date': method_to_date,
         'cost_types': {
