@@ -4,7 +4,7 @@ import math
 from pytz import timezone
 from psycopg import DatabaseError
 from ._psql import query_calorific_values, retrive_unit_rates, retrive_consumption
-from ._utils import parse_date, format_date
+from ._utils import _parse_date, _format_date
 import pandas as pd
 import numpy as np
 import janitor
@@ -191,16 +191,16 @@ def _run_config(psql_config, data, energy_type, from_date, to_date, LDZ=None):
         ):
             missing_days = abs((min_date - from_date).days + (max_date - to_date).days)
             raise DatabaseError(
-                f"There is {missing_days} day(s) of missing data for {name}. The data was available from {format_date(min_date)} to {format_date(max_date)}. The required range is {format_date(from_date)} to {format_date(to_date)}. Is the database up to date? Try running update()."
+                f"There is {missing_days} day(s) of missing data for {name}. The data was available from {_format_date(min_date)} to {_format_date(max_date)}. The required range is {_format_date(from_date)} to {_format_date(to_date)}. Is the database up to date? Try running update()."
             )
 
     utc = timezone("UTC")
 
     print(
         "Getting consumption figures from",
-        format_date(from_date),
+        _format_date(from_date),
         "to",
-        format_date(to_date),
+        _format_date(to_date),
     )
 
     consumption_df = pd.concat(
@@ -292,18 +292,18 @@ def calculate(self, from_date: None | str | datetime = None, to_date: None | str
     data = self.calcs[energy_type]
 
     if from_date:
-        from_date = parse_date(from_date)
+        from_date = _parse_date(from_date)
     else:
         from_date = self.MOVED_IN_AT
 
     if to_date:
-        to_date = parse_date(to_date)
+        to_date = _parse_date(to_date)
     else:
-        to_date = parse_date(add=-1)
+        to_date = _parse_date(add=-1)
 
     if from_date > to_date:
         raise ValueError(
-            f"from_date {format_date(from_date)} is larger than the to_date {format_date(to_date)} "
+            f"from_date {_format_date(from_date)} is larger than the to_date {_format_date(to_date)} "
         )
 
     data["from_date"] = from_date
@@ -340,8 +340,8 @@ def _check_method_dates(data, from_date, to_date):
             invalid_methods.append(
                 {
                     "name": method["name"],
-                    "from": format_date(method_from_date),
-                    "to": format_date(method_to_date_display),
+                    "from": _format_date(method_from_date),
+                    "to": _format_date(method_to_date_display),
                 }
             )
 
@@ -349,8 +349,8 @@ def _check_method_dates(data, from_date, to_date):
     if invalid_methods:
         table = PrettyTable(["Method", "from", "to"])
 
-        main_msg = f"The calculation's date range {format_date(from_date)} to {format_date(to_date)} does not fall within the following method(s) date range(s):\n"
-        earliest_date_msg = f"\nThe earliest calculation date is {format_date(earliest_date)}. Either remove the offending method(s) or change the calculation dates."
+        main_msg = f"The calculation's date range {_format_date(from_date)} to {_format_date(to_date)} does not fall within the following method(s) date range(s):\n"
+        earliest_date_msg = f"\nThe earliest calculation date is {_format_date(earliest_date)}. Either remove the offending method(s) or change the calculation dates."
         for invalid in invalid_methods:
             table.add_row([invalid["name"], invalid["from"], invalid["to"]])
 

@@ -1,7 +1,7 @@
 from prettytable import PrettyTable
 import pandas as pd
 import numpy as np
-from ._utils import parse_date, format_date
+from ._utils import _parse_date, _format_date
 
 
 def print_bill(self, from_date=None, to_date=None, energy_type=None):
@@ -17,21 +17,21 @@ def print_method(self, name, from_date=None, to_date=None, energy_type=None):
 
 
     if from_date:
-        from_date = parse_date(from_date)
+        from_date = _parse_date(from_date)
     else:
         from_date = self.MOVED_IN_AT
 
     if to_date:
-        to_date = parse_date(to_date, 1)
+        to_date = _parse_date(to_date, 1)
     else:
-        to_date = parse_date(add=-1)
+        to_date = _parse_date(add=-1)
 
     data = self.calcs[energy_type]
     calcs_from_date = data["from_date"]
 
     if from_date < data["from_date"]:
         raise ValueError(
-            f"{format_date(from_date)} is earlier than the from_date used in the calculations {format_date(calcs_from_date)}."
+            f"{_format_date(from_date)} is earlier than the from_date used in the calculations {_format_date(calcs_from_date)}."
         )
 
     method = self.search_method(energy_type, name)
@@ -134,14 +134,14 @@ def print_compare(self, from_date=None, to_date=None, energy_type=None):
     data = self.calcs[energy_type]
 
     if from_date:
-        from_date = parse_date(from_date)
+        from_date = _parse_date(from_date)
     else:
         from_date = self.MOVED_IN_AT
 
     if to_date:
-        to_date = parse_date(to_date, 1)
+        to_date = _parse_date(to_date, 1)
     else:
-        to_date = parse_date(add=-1)
+        to_date = _parse_date(add=-1)
 
     from_date = pd.to_datetime(from_date).to_datetime64()
     to_date = pd.to_datetime(to_date).to_datetime64()

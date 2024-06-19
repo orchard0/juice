@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from pytz import timezone
 
 
-def parse_date(date=None, add=0):
+def _parse_date(date=None, add=0):
 
     utc = timezone("UTC")
 
@@ -26,7 +26,7 @@ def parse_date(date=None, add=0):
     return result
 
 
-def format_date(date):
+def _format_date(date):
     london = timezone("Europe/London")
     if isinstance(date, float):
         return "Infinity"
