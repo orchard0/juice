@@ -79,6 +79,21 @@ def add_method_by_product_code(self, product_code: str , energy_type: str | None
 
 def add_bill(self, energy_type=None):
 
+    """
+    Add the account bill to the calculation methods.
+
+    Examples:
+        >>> account.add_bill()
+
+
+    Args:
+        energy_type: Set the energy type for which the bill should be calculated.
+
+    Returns:
+        None
+        
+    """
+
     if energy_type is None:
         energy_type = self.energy_type
     self.check_energy_type_input(energy_type)
