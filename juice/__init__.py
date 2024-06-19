@@ -30,7 +30,7 @@ class Juice:
         get_calorific_values,
     )
     from ._tariffs import (
-        remove_tariff,
+        remove_method,
         add_bill,
         add_consumption,
         add_method,

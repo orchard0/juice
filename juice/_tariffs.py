@@ -1,6 +1,25 @@
 from ._psql import query_octopus_product_by_family_name, query_octopus_product_by_product_code
 
-def remove_tariff(self, energy_type, name):
+def remove_method(self, name: str, energy_type: str | None = None):
+
+    """
+    Remove a calculation method.
+
+    Examples:
+        >>> account.remove_tariff('Bill')
+
+    Args:
+        name: The name of the calculation method to remove.
+        energy_type: The energy type from which to remove the calculation method.
+
+    Returns:
+        None
+        
+    """
+
+    if energy_type is None:
+        energy_type = self.energy_type
+    self.check_energy_type_input(energy_type)
 
     data = self.calcs[energy_type]
 
@@ -11,7 +30,7 @@ def remove_tariff(self, energy_type, name):
 
     for index in remove_indexes:
         del data['methods'][index]
-        print('removed', name)
+        print('Removed', name)
 
 
 def add_method_by_product_family(self, family_name: str, energy_type: str | None =None):
@@ -115,7 +134,7 @@ def add_method(self, energy_type, name, agreements, replace=False):
 
     searched = self.search_method(energy_type, name)
     if searched and replace:
-        self.remove_tariff(energy_type, name)
+        self.remove_tariff(name, energy_type)
     elif searched and not replace:
         raise ValueError(f'{name} method already exist. Either remove it first or use the replace parameter.')
 
