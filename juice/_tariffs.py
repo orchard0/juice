@@ -14,23 +14,55 @@ def remove_tariff(self, energy_type, name):
         print('removed', name)
 
 
-def add_method_by_product_family(self, display_name, energy_type=None):
+def add_method_by_product_family(self, family_name: str, energy_type: str | None =None):
+
+    """
+    Add a calculation method using an Octopus product family. e.g. "Agile Octopus". Only tariffs available in your local database will be added to the method.
+
+    Examples:
+        >>> account.add_method_by_product_family('Agile Octopus')
+
+
+    Args:
+        family_name: The name of the Octopus product family to add. e.g. "Flexible Octopus"
+        energy_type: Set the energy type for this particular method call.
+
+    Returns:
+        None
+        
+    """
 
     if energy_type is None:
         energy_type = self.energy_type
     self.check_energy_type_input(energy_type)
 
-    if isinstance(display_name, list):
-        for dn in display_name:
+    if isinstance(family_name, list):
+        for dn in family_name:
             tariffs = query_octopus_product_by_family_name(self.psql_config, dn, energy_type, self.GSP)
             self.add_method(energy_type, dn, tariffs)
-    elif isinstance(display_name, str):
-        tariffs = query_octopus_product_by_family_name(self.psql_config, display_name, energy_type, self.GSP)
-        self.add_method(energy_type, display_name, tariffs)
+    elif isinstance(family_name, str):
+        tariffs = query_octopus_product_by_family_name(self.psql_config, family_name, energy_type, self.GSP)
+        self.add_method(energy_type, family_name, tariffs)
     pass
 
-def add_method_by_product_code(self, product_code, energy_type=None):
+def add_method_by_product_code(self, product_code: str , energy_type: str | None =None):
 
+    """
+    Add a calculation method using an Octopus product code. e.g. "AGILE-23-12-06".
+
+    Examples:
+        >>> account.add_method_by_product_family('AGILE-23-12-06')
+
+
+    Args:
+        product_code: The Octopus product code to add. e.g. "SILVER-23-12-06"
+        energy_type: Set the energy type for this particular method call.
+
+    Returns:
+        None
+        
+    """
+        
     if energy_type is None:
         energy_type = self.energy_type
     self.check_energy_type_input(energy_type)
