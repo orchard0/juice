@@ -46,7 +46,7 @@ class Juice:
         update_by_tariff_code,
         update_existing_products,
         update,
-        update_database_with_product_code,
+        update_products_database_by_product_code,
     )
 
     def __init__(

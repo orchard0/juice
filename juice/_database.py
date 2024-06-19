@@ -7,8 +7,29 @@ from ._psql import (
 from ._get import octopus_custom_products_download
 
 
-def update_database_with_product_code(self, product_codes):
-    
+def update_products_database_by_product_code(self, product_codes: list | str):
+
+    """
+    Add product information to local Octopus products database.
+
+    Examples:
+        >>> product_codes = ['AGILE-FLEX-22-11-25', 'SILVER-FLEX-22-11-25']
+        >>> account.update_products_database_by_product_code(product_codes)
+        OR
+        >>> account.update_products_database_by_product_code('AGILE-FLEX-22-11-25')
+
+
+    Args:
+        product_codes: A list of Octopus products to add to the products database.
+
+    Returns:
+        None
+        
+    """
+
+    if isinstance(product_codes, str):
+        product_codes = [product_codes]
+
     products  = query_octopus_product_not_in_database(self.psql_config, product_codes)
     if not products:
         print('All the products are already in the database.')
@@ -17,7 +38,28 @@ def update_database_with_product_code(self, product_codes):
     octopus_custom_products_download(self.psql_config, products, self.headers)
 
 
-def update_by_tariff_code(self, tariff_codes, force_refresh=None):
+def update_by_tariff_code(self, tariff_codes: list, force_refresh: bool | None = None):
+
+    """
+    Update/create databases of supplied Octopus tariff codes.
+
+    Examples:
+        >>> tariff_codes = ['E-1R-AGILE-FLEX-22-11-25-C', 'E-1R-INTELLI-VAR-22-10-14-C']
+        >>> account.update_by_product_code(tariff_codes)
+        OR
+        >>> account.update_by_product_code('E-1R-AGILE-FLEX-22-11-25-C')
+
+    Args:
+        tariff_codes: A list of Octopus tariff codes to update.
+        force_refresh: Whether to delete and recreate the databases.
+
+    Returns:
+        None
+        
+    """
+    if isinstance(tariff_codes, str):
+        tariff_codes = [tariff_codes]
+
     for entry in tariff_codes:
         self.get_tariffs(
             self.psql_config,
@@ -27,14 +69,49 @@ def update_by_tariff_code(self, tariff_codes, force_refresh=None):
         )
 
 
-def update_existing_products(self, force_refresh=None):
+def update_existing_products(self, force_refresh: bool | None =None):
+
+    """
+    Update existing Octopus tariff databases.
+
+    Examples:
+        >>> account.update_existing_products()
+
+    Args:
+        force_refresh: Whether to delete and recreate the databases.
+
+    Returns:
+        None
+        
+    """
+
 
     tariff_codes = self.query_existing_products_tables(self.psql_config)
     self.update_by_tariff_code(tariff_codes, force_refresh)
 
 
-def update_by_product_code(self, product_codes, force_refresh=None, energy_type=None):
+def update_by_product_code(self, product_codes: list | str, force_refresh: bool | None = None, energy_type: str | None = None):
 
+    """
+    Update/create databases of supplied Octopus product codes.
+
+    Examples:
+        >>> product_codes = ['Agile Octopus', 'Flexible Octopus']
+        >>> account.update_by_product_code(product_codes)
+        OR
+        >>> account.update_by_product_code('Agile Octopus')
+
+
+    Args:
+        product_codes: A list of Octopus product codes to update.
+        force_refresh: Whether to delete and recreate the databases.
+        energy_type: Update for the specified energy type.
+
+    Returns:
+        None
+        
+    """
+        
     if energy_type is None:
         energy_type = self.energy_type
     self.check_energy_type_input(energy_type)
@@ -53,7 +130,28 @@ def update_by_product_code(self, product_codes, force_refresh=None, energy_type=
     self.update_by_tariff_code(tariff_codes, force_refresh)
 
 
-def update_by_product_family(self, product_families, force_refresh=None, energy_type=None):
+def update_by_product_family(self, product_families: list | str, force_refresh: bool | None = None, energy_type: str | None = None):
+
+    """
+    Update/create tariff databases of supplied Octopus product families. Only tariffs available in your local Octopus products database will be updated.
+
+    Examples:
+        >>> product_families = ['Agile Octopus', 'Flexible Octopus']
+        >>> account.update_by_product_family(product_families)
+        OR 
+        >>> account.update_by_product_family('Flexible Octopus')
+
+
+    Args:
+        product_families: A list of Octopus product families to update.
+        force_refresh: Whether to delete and recreate the databases.
+        energy_type: Update for the specified energy type.
+
+    Returns:
+        None
+        
+    """
+
 
     if energy_type is None:
         energy_type = self.energy_type
@@ -75,7 +173,21 @@ def update_by_product_family(self, product_families, force_refresh=None, energy_
     
 
 
-def update(self, force_refresh=False):
+def update(self, force_refresh: bool | None = False):
+
+    """
+    Update/create consumption, account tariffs, Octopus products and existing tariff databases.
+
+    Examples:
+        >>> account.update()
+
+    Args:
+        force_refresh: Whether to delete and recreate the databases.
+
+    Returns:
+        None
+        
+    """
 
     print(f'Updating {self.ACCOUNT_DATA['number']}.')
 

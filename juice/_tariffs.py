@@ -36,7 +36,7 @@ def remove_method(self, name: str, energy_type: str | None = None):
 def add_method_by_product_family(self, family_name: str, energy_type: str | None =None):
 
     """
-    Add a calculation method using an Octopus product family. e.g. "Agile Octopus". Only tariffs available in your local database will be added to the method.
+    Add a calculation method using an Octopus product family. e.g. "Agile Octopus". Only tariffs available in your local local Octopus products database will be added to the method.
 
     Examples:
         >>> account.add_method_by_product_family('Agile Octopus')
