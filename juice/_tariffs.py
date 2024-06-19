@@ -204,7 +204,7 @@ def add_method(self, name: str, tariff_agreements: list, energy_type: str | None
     pass
 
 
-def add_consumption(self):
+def _add_consumption(self):
     for energy_type in ['gas', 'electricity']:
 
         data = self.calcs[energy_type]

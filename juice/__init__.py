@@ -32,7 +32,7 @@ class Juice:
     from ._tariffs import (
         remove_method,
         add_bill,
-        add_consumption,
+        _add_consumption,
         add_method,
         add_method_by_product_family,
         add_method_by_product_code,
@@ -118,7 +118,7 @@ class Juice:
             },
         }
 
-        self.add_consumption()
+        self._add_consumption()
 
         self.headers = headers
 
