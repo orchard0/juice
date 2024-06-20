@@ -4,7 +4,7 @@ from ._psql import (
     query_octopus_product_by_product_code,
     query_octopus_product_not_in_database
 )
-from ._get import octopus_custom_products_download
+from ._get import _octopus_custom_products_download
 
 
 def update_products_database_by_product_code(self, product_codes: list | str):
@@ -35,7 +35,7 @@ def update_products_database_by_product_code(self, product_codes: list | str):
         print('All the products are already in the database.')
         return
     
-    octopus_custom_products_download(self.psql_config, products, self.headers)
+    _octopus_custom_products_download(self.psql_config, products, self.headers)
 
 
 def update_by_tariff_code(self, tariff_codes: list, force_refresh: bool | None = None):
@@ -61,7 +61,7 @@ def update_by_tariff_code(self, tariff_codes: list, force_refresh: bool | None =
         tariff_codes = [tariff_codes]
 
     for entry in tariff_codes:
-        self.get_tariffs(
+        self._get_tariffs(
             self.psql_config,
             entry["tariff_code"],
             force_refresh=force_refresh,
@@ -194,22 +194,22 @@ def update(self, force_refresh: bool | None = False):
     create_updates_table(self.psql_config)
 
     for consumption in self.CONSUMPTION:
-        self.get_consumption(self.psql_config, self.API_KEY,
+        self._get_consumption(self.psql_config, self.API_KEY,
                                 account_id=self.ACCOUNT_ID,
                                 force_refresh=force_refresh,
                                 headers=self.headers,
                                 **consumption)
 
     for tariff in self.AGREEMENTS:
-        self.get_tariffs(self.psql_config, tariff['tariff_code'], force_refresh=force_refresh, headers=self.headers)
+        self._get_tariffs(self.psql_config, tariff['tariff_code'], force_refresh=force_refresh, headers=self.headers)
 
-    self.get_octopus_products(self.psql_config, self.headers)
+    self._get_octopus_products(self.psql_config, self.headers)
 
     if self.calcs['gas']['consumption_dbs']:
         if not self.LDZ:
             raise ValueError('There were gas consumption databases found but no LDZ. Please add it to the Juice constructor.')
         for x in self.ACCOUNT_DATA['properties']:
-            self.get_calorific_values(self.psql_config, x['moved_in_at'], self.LDZ, headers=self.headers)
+            self._get_calorific_values(self.psql_config, x['moved_in_at'], self.LDZ, headers=self.headers)
 
     self.update_existing_products(force_refresh)
 

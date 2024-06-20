@@ -33,7 +33,7 @@ TARIFFS_URL = (
 
 
 @staticmethod
-def get_octopus_products(psql_config, headers=None):
+def _get_octopus_products(psql_config, headers=None):
     table_name = "products_octopus_energy"
 
     if datetime.now(UTC) < query_updates(psql_config, table_name) + timedelta(
@@ -58,7 +58,7 @@ def get_octopus_products(psql_config, headers=None):
     pass
 
 
-def octopus_custom_products_download(psql_config, products, headers=None):
+def _octopus_custom_products_download(psql_config, products, headers=None):
     print("Updating Octopus Products database")
     create_octopus_products_db(psql_config)
     url = "https://api.octopus.energy/v1/products/{product}/"
@@ -82,7 +82,7 @@ def octopus_custom_products_download(psql_config, products, headers=None):
 
 
 @staticmethod
-def get_calorific_values(
+def _get_calorific_values(
     psql_config, moved_in_at, LDZ, force_refresh=False, headers=None
 ):
 
@@ -151,7 +151,7 @@ def get_calorific_values(
 
 
 @staticmethod
-def get_consumption(
+def _get_consumption(
     psql_config,
     api_key,
     energy_type,
@@ -214,7 +214,7 @@ def get_consumption(
 
 
 @staticmethod
-def get_tariffs(psql_config, tariff_code, force_refresh=False, headers=None):
+def _get_tariffs(psql_config, tariff_code, force_refresh=False, headers=None):
 
     if "G-1R" in tariff_code:
         energy_type = "gas"

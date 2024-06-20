@@ -24,10 +24,10 @@ class Juice:
         parse_account_information,
     )
     from ._get import (
-        get_octopus_products,
-        get_consumption,
-        get_tariffs,
-        get_calorific_values,
+        _get_octopus_products,
+        _get_consumption,
+        _get_tariffs,
+        _get_calorific_values,
     )
     from ._tariffs import (
         remove_method,
