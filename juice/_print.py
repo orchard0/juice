@@ -2,14 +2,52 @@ from prettytable import PrettyTable
 import pandas as pd
 import numpy as np
 from ._utils import _parse_date, _format_date
+from datetime import datetime
 
 
-def print_bill(self, from_date=None, to_date=None, energy_type=None):
+def print_bill(self, from_date: str | datetime = None, to_date: str | datetime = None, energy_type: str | None = None):
+
+    """
+    Print the bill for the account.
+
+    Examples:
+        >>> account.print_bill()
+        >>> account.print_bill('2023-01-15', '2024-04-16')
+
+
+    Args:
+        from_date: The date from which to print the costs.
+        to_date: The date to which to print the costs.
+        energy_type: The energy type to use in the bill.
+
+    Returns:
+        None
+        
+    """
 
     self.print_method("Bill", from_date, to_date, energy_type)
 
 
-def print_method(self, name, from_date=None, to_date=None, energy_type=None):
+def print_method(self, name, from_date: str | datetime = None, to_date: str | datetime = None, energy_type: str | None = None):
+
+    """
+    Print the bill for the specified calculation method.
+
+    Examples:
+        >>> account.print_method('Agile Octopus')
+        >>> account.print_method('Flexible Octopus', '2023-01-15', '2024-04-16')
+
+
+    Args:
+        from_date: The date from which to print the costs.
+        to_date: The date to which to print the costs.
+        energy_type: The energy type to use in the bill.
+
+    Returns:
+        None
+        
+    """
+
 
     if energy_type is None:
         energy_type = self.energy_type
@@ -40,10 +78,10 @@ def print_method(self, name, from_date=None, to_date=None, energy_type=None):
             f'The method "{name}" does not exist. Did you add it to the correct energy type and then call calculate?'
         )
 
-    print_cost(method, from_date, to_date)
+    _print_cost(method, from_date, to_date)
 
-
-def print_cost(method, from_date, to_date):
+@staticmethod
+def _print_cost(method, from_date, to_date):
 
     energy_type = None
 
@@ -125,7 +163,24 @@ def print_cost(method, from_date, to_date):
     print(table)
 
 
-def print_compare(self, from_date=None, to_date=None, energy_type=None):
+def print_compare(self, from_date: str | datetime = None, to_date: str | datetime = None, energy_type: str | None = None):
+
+    """
+    Print a comparison table of all the calculation methods.
+
+    Examples:
+        >>> account.print_compare('Agile Octopus')
+        >>> account.print_compare('Flexible Octopus', '2023-01-15', '2024-04-16')
+
+    Args:
+        from_date: The date from which to print the comparion.
+        to_date: The date to which to print the comparion.
+        energy_type: The energy type to use in the comparion.
+
+    Returns:
+        None
+        
+    """
 
     if energy_type is None:
         energy_type = self.energy_type
@@ -200,7 +255,7 @@ def print_compare(self, from_date=None, to_date=None, energy_type=None):
     pass
 
 
-def print_checks(self, energy_type=None):
+def print_checks(self, energy_type: str | None = None):
 
     if energy_type is None:
         energy_type = self.energy_type
@@ -210,10 +265,10 @@ def print_checks(self, energy_type=None):
 
     for method in data["methods"]:
         print("Total final rows for", method["name"], method["dataframe"].shape[0])
-        find_duplicates(method["dataframe"])
+        _find_duplicates(method["dataframe"])
 
 
-def find_duplicates(table):
+def _find_duplicates(table):
     try:
         print(pd.concat(g for _, g in table.groupby("from") if len(g) > 1))
     except ValueError:
