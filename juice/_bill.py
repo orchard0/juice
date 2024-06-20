@@ -287,7 +287,7 @@ def calculate(self, from_date: None | str | datetime = None, to_date: None | str
 
     if energy_type is None:
         energy_type = self.energy_type
-    self.check_energy_type_input(energy_type)
+    self._check_energy_type_input(energy_type)
 
     data = self.calcs[energy_type]
 

@@ -13,7 +13,7 @@ def print_method(self, name, from_date=None, to_date=None, energy_type=None):
 
     if energy_type is None:
         energy_type = self.energy_type
-    self.check_energy_type_input(energy_type)
+    self._check_energy_type_input(energy_type)
 
 
     if from_date:
@@ -34,7 +34,7 @@ def print_method(self, name, from_date=None, to_date=None, energy_type=None):
             f"{_format_date(from_date)} is earlier than the from_date used in the calculations {_format_date(calcs_from_date)}."
         )
 
-    method = self.search_method(energy_type, name)
+    method = self._search_method(energy_type, name)
     if not method:
         raise ValueError(
             f'The method "{name}" does not exist. Did you add it to the correct energy type and then call calculate?'
@@ -129,7 +129,7 @@ def print_compare(self, from_date=None, to_date=None, energy_type=None):
 
     if energy_type is None:
         energy_type = self.energy_type
-    self.check_energy_type_input(energy_type)
+    self._check_energy_type_input(energy_type)
 
     data = self.calcs[energy_type]
 
@@ -204,7 +204,7 @@ def print_checks(self, energy_type=None):
 
     if energy_type is None:
         energy_type = self.energy_type
-    self.check_energy_type_input(energy_type)
+    self._check_energy_type_input(energy_type)
 
     data = self.calcs[energy_type]
 

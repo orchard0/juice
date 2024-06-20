@@ -19,7 +19,7 @@ def remove_method(self, name: str, energy_type: str | None = None):
 
     if energy_type is None:
         energy_type = self.energy_type
-    self.check_energy_type_input(energy_type)
+    self._check_energy_type_input(energy_type)
 
     data = self.calcs[energy_type]
 
@@ -53,7 +53,7 @@ def add_method_by_product_family(self, family_name: str, energy_type: str | None
 
     if energy_type is None:
         energy_type = self.energy_type
-    self.check_energy_type_input(energy_type)
+    self._check_energy_type_input(energy_type)
 
     if isinstance(family_name, list):
         for dn in family_name:
@@ -84,7 +84,7 @@ def add_method_by_product_code(self, product_code: str , energy_type: str | None
         
     if energy_type is None:
         energy_type = self.energy_type
-    self.check_energy_type_input(energy_type)
+    self._check_energy_type_input(energy_type)
 
     if isinstance(product_code, list):
         for dn in product_code:
@@ -115,7 +115,7 @@ def add_bill(self, energy_type=None):
 
     if energy_type is None:
         energy_type = self.energy_type
-    self.check_energy_type_input(energy_type)
+    self._check_energy_type_input(energy_type)
 
     agreements = list(
         filter(lambda n: n['energy_type'] == energy_type, self.AGREEMENTS))
@@ -167,11 +167,11 @@ def add_method(self, name: str, tariff_agreements: list, energy_type: str | None
 
     if energy_type is None:
         energy_type = self.energy_type
-    self.check_energy_type_input(energy_type)
+    self._check_energy_type_input(energy_type)
 
     data = self.calcs[energy_type]
 
-    searched = self.search_method(energy_type, name)
+    searched = self._search_method(energy_type, name)
     if searched and replace:
         self.remove_tariff(name, energy_type)
     elif searched and not replace:

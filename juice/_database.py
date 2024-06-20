@@ -114,7 +114,7 @@ def update_by_product_code(self, product_codes: list | str, force_refresh: bool 
         
     if energy_type is None:
         energy_type = self.energy_type
-    self.check_energy_type_input(energy_type)
+    self._check_energy_type_input(energy_type)
 
     if isinstance(product_codes, str):
         product_codes = [product_codes]
@@ -155,7 +155,7 @@ def update_by_product_family(self, product_families: list | str, force_refresh: 
 
     if energy_type is None:
         energy_type = self.energy_type
-    self.check_energy_type_input(energy_type)
+    self._check_energy_type_input(energy_type)
 
     if isinstance(product_families, str):
         product_families = [product_families]

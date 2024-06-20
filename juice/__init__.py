@@ -78,7 +78,7 @@ class Juice:
         
         """
 
-        self.create_working_dirs()
+        self._create_working_dirs()
 
         if psql_config:
             self.psql_config = psql_config
@@ -99,8 +99,8 @@ class Juice:
             self.parse_account_information(self.ACCOUNT_DATA)
         )
 
-        self.ELEC_EARLIEST = self.retrive_earliest(self.AGREEMENTS, "electricity")
-        self.GAS_EARLIEST = self.retrive_earliest(self.AGREEMENTS, "gas")
+        self.ELEC_EARLIEST = self._retrive_earliest(self.AGREEMENTS, "electricity")
+        self.GAS_EARLIEST = self._retrive_earliest(self.AGREEMENTS, "gas")
 
         if LDZ:
             self.LDZ = LDZ
@@ -136,7 +136,7 @@ class Juice:
         return json.dumps(self.calcs, default=handle)
 
     def set_energy(self, energy_type):
-        self.check_energy_type_input(energy_type)
+        self._check_energy_type_input(energy_type)
         self.energy_type = energy_type
 
         if energy_type == "electricity":
@@ -146,7 +146,7 @@ class Juice:
         pass
 
     @staticmethod
-    def retrive_earliest(agreements, energy_type):
+    def _retrive_earliest(agreements, energy_type):
 
         filtered = filter(lambda n: n["energy_type"] == energy_type, agreements)
         try:
@@ -159,7 +159,7 @@ class Juice:
         except:
             return None
 
-    def search_method(self, energy_type, name):
+    def _search_method(self, energy_type, name):
 
         method = list(
             filter(
@@ -174,7 +174,7 @@ class Juice:
             return method[0]
 
     @staticmethod
-    def check_energy_type_input(energy_type):
+    def _check_energy_type_input(energy_type):
 
         if energy_type not in ENERGY_TYPES:
             raise ValueError(
@@ -184,7 +184,7 @@ class Juice:
         pass
 
     @staticmethod
-    def create_working_dirs():
+    def _create_working_dirs():
         script_dir = path.dirname(sys.argv[0])
         accounts_dir = path.join(script_dir, "Accounts")
         Path(accounts_dir).mkdir(parents=True, exist_ok=True)
