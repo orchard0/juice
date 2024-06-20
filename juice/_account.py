@@ -10,16 +10,16 @@ from ._psql import query_ldz
 from ._data import OCOTPUS_API_BASE_URL
 
 
-def set_account_info(self):
-    data = self.read_account_json(self.ACCOUNT_ID)
+def _set_account_info(self):
+    data = _read_account_json(self.ACCOUNT_ID)
     if not data:
-        data = self.get_account_info(self.psql_config, self.API_KEY, self.ACCOUNT_ID)
+        data = _get_account_info(self.psql_config, self.API_KEY, self.ACCOUNT_ID)
 
     return data
 
 
 @staticmethod
-def read_account_json(ACCOUNT_ID):
+def _read_account_json(ACCOUNT_ID):
 
     script_dir = path.dirname(sys.argv[0])
     account_json = path.join(script_dir, "Accounts", f"{ACCOUNT_ID}.json")
@@ -38,7 +38,7 @@ def read_account_json(ACCOUNT_ID):
 
 
 @staticmethod
-def get_account_info(psql_config, API_KEY, ACCOUNT_ID):
+def _get_account_info(psql_config, API_KEY, ACCOUNT_ID):
     ACCOUNT_URL = OCOTPUS_API_BASE_URL + f"/accounts/{ACCOUNT_ID}"
 
     response = requests.get(ACCOUNT_URL, auth=HTTPBasicAuth(API_KEY, ""))
@@ -65,7 +65,7 @@ def get_account_info(psql_config, API_KEY, ACCOUNT_ID):
 
 
 @staticmethod
-def parse_account_information(data):
+def _parse_account_information(data):
     """'
     Return all meters and agreements found in account data.
     """

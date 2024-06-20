@@ -18,10 +18,10 @@ class Juice:
 
 
     from ._account import (
-        set_account_info,
-        read_account_json,
-        get_account_info,
-        parse_account_information,
+        _set_account_info,
+        _read_account_json,
+        _get_account_info,
+        _parse_account_information,
     )
     from ._get import (
         _get_octopus_products,
@@ -94,9 +94,9 @@ class Juice:
 
         self.API_KEY = API_KEY
         self.ACCOUNT_ID = ACCOUNT_ID.upper()
-        self.ACCOUNT_DATA = self.set_account_info()
+        self.ACCOUNT_DATA = self._set_account_info()
         self.CONSUMPTION, self.AGREEMENTS, self.GSP, queried_ldz = (
-            self.parse_account_information(self.ACCOUNT_DATA)
+            self._parse_account_information(self.ACCOUNT_DATA)
         )
 
         self.ELEC_EARLIEST = self._retrive_earliest(self.AGREEMENTS, "electricity")
