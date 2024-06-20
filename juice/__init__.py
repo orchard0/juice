@@ -127,6 +127,20 @@ class Juice:
     @property
     def data(self):
 
+        """
+        Return json formated calculations settings.
+
+        Example:
+            >>> account.data
+
+        Args:
+            None
+
+        Returns:
+            str
+        
+        """
+
         def handle(i):
             if type(i) == pandas.core.frame.DataFrame:
                 return "PANDAS_DATAFRAME"
@@ -135,7 +149,23 @@ class Juice:
 
         return json.dumps(self.calcs, default=handle)
 
-    def set_energy(self, energy_type):
+    def set_energy(self, energy_type: str):
+
+        """
+        Set energy type for succeeding methods that rely on an optional energy_type parameter.
+
+        Example:
+            >>> account.set_energy('gas')
+
+        Args:
+            energy_type: The energy type to set.
+
+        
+        Returns:
+            None
+        """
+
+
         self._check_energy_type_input(energy_type)
         self.energy_type = energy_type
 
