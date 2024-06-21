@@ -1,0 +1,1686 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../install/">
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.27">
+    
+    
+      
+        <title>API reference - Juice - Python utilities library</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6543a935.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#juice.Juice" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Juice - Python utilities library" class="md-header__button md-logo" aria-label="Juice - Python utilities library" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Juice - Python utilities library
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Juice - Python utilities library" class="md-nav__button md-logo" aria-label="Juice - Python utilities library" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Juice - Python utilities library
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    API reference
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    API reference
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#juice.Juice" class="md-nav__link">
+    <span class="md-ellipsis">
+      Juice
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice.Juice.data" class="md-nav__link">
+    <span class="md-ellipsis">
+      data
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice.Juice.set_energy" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_energy
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._tariffs" class="md-nav__link">
+    <span class="md-ellipsis">
+      _tariffs
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._tariffs.add_bill" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_bill
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._tariffs.add_method" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_method
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._tariffs.add_method_by_product_code" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_method_by_product_code
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._tariffs.add_method_by_product_family" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_method_by_product_family
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._tariffs.remove_method" class="md-nav__link">
+    <span class="md-ellipsis">
+      remove_method
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._bill" class="md-nav__link">
+    <span class="md-ellipsis">
+      _bill
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._bill.calculate" class="md-nav__link">
+    <span class="md-ellipsis">
+      calculate
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._print" class="md-nav__link">
+    <span class="md-ellipsis">
+      _print
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._print.print_bill" class="md-nav__link">
+    <span class="md-ellipsis">
+      print_bill
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._print.print_compare" class="md-nav__link">
+    <span class="md-ellipsis">
+      print_compare
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._print.print_method" class="md-nav__link">
+    <span class="md-ellipsis">
+      print_method
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._database" class="md-nav__link">
+    <span class="md-ellipsis">
+      _database
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._database.update" class="md-nav__link">
+    <span class="md-ellipsis">
+      update
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._database.update_by_product_code" class="md-nav__link">
+    <span class="md-ellipsis">
+      update_by_product_code
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._database.update_by_product_family" class="md-nav__link">
+    <span class="md-ellipsis">
+      update_by_product_family
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._database.update_by_tariff_code" class="md-nav__link">
+    <span class="md-ellipsis">
+      update_by_tariff_code
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._database.update_existing_products" class="md-nav__link">
+    <span class="md-ellipsis">
+      update_existing_products
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._database.update_products_database_by_product_code" class="md-nav__link">
+    <span class="md-ellipsis">
+      update_products_database_by_product_code
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#juice.Juice" class="md-nav__link">
+    <span class="md-ellipsis">
+      Juice
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice.Juice.data" class="md-nav__link">
+    <span class="md-ellipsis">
+      data
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice.Juice.set_energy" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_energy
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._tariffs" class="md-nav__link">
+    <span class="md-ellipsis">
+      _tariffs
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._tariffs.add_bill" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_bill
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._tariffs.add_method" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_method
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._tariffs.add_method_by_product_code" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_method_by_product_code
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._tariffs.add_method_by_product_family" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_method_by_product_family
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._tariffs.remove_method" class="md-nav__link">
+    <span class="md-ellipsis">
+      remove_method
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._bill" class="md-nav__link">
+    <span class="md-ellipsis">
+      _bill
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._bill.calculate" class="md-nav__link">
+    <span class="md-ellipsis">
+      calculate
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._print" class="md-nav__link">
+    <span class="md-ellipsis">
+      _print
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._print.print_bill" class="md-nav__link">
+    <span class="md-ellipsis">
+      print_bill
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._print.print_compare" class="md-nav__link">
+    <span class="md-ellipsis">
+      print_compare
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._print.print_method" class="md-nav__link">
+    <span class="md-ellipsis">
+      print_method
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._database" class="md-nav__link">
+    <span class="md-ellipsis">
+      _database
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._database.update" class="md-nav__link">
+    <span class="md-ellipsis">
+      update
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._database.update_by_product_code" class="md-nav__link">
+    <span class="md-ellipsis">
+      update_by_product_code
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._database.update_by_product_family" class="md-nav__link">
+    <span class="md-ellipsis">
+      update_by_product_family
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._database.update_by_tariff_code" class="md-nav__link">
+    <span class="md-ellipsis">
+      update_by_tariff_code
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._database.update_existing_products" class="md-nav__link">
+    <span class="md-ellipsis">
+      update_existing_products
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juice._database.update_products_database_by_product_code" class="md-nav__link">
+    <span class="md-ellipsis">
+      update_products_database_by_product_code
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  <h1>API reference</h1>
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="juice.Juice"></a>
+    <div class="doc doc-contents first">
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="juice.Juice.data" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">data</span><span class="p">:</span> <span class="nb">str</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Return json formated calculations settings.</p>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <blockquote>
+<blockquote>
+<blockquote>
+<p>account.data</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</details>    </div>
+
+</div>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="juice.Juice.set_energy" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">set_energy</span><span class="p">(</span><span class="n">energy_type</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Set energy type for succeeding methods that rely on an optional energy_type parameter.</p>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <blockquote>
+<blockquote>
+<blockquote>
+<p>account.set_energy('gas')</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</details>
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+          <b><code>energy_type</code></b>
+              (<code>str</code>)
+          –
+          <div class="doc-md-description">
+            <p>The energy type to set.</p>
+          </div>
+        </li>
+    </ul>
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="juice._tariffs"></a>
+    <div class="doc doc-contents first">
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="juice._tariffs.add_bill" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">add_bill</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">energy_type</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Add the account bill to the calculation methods.</p>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">account</span><span class="o">.</span><span class="n">add_bill</span><span class="p">()</span>
+</code></pre></div>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+          <b><code>energy_type</code></b>
+          –
+          <div class="doc-md-description">
+            <p>Set the energy type for which the bill should be calculated.</p>
+          </div>
+        </li>
+    </ul>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="juice._tariffs.add_method" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">add_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">tariff_agreements</span><span class="p">,</span> <span class="n">energy_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Add a calculation method using a custom tariff list.</p>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">custom_list</span> <span class="o">=</span>  <span class="p">[</span>
+<span class="go">  {</span>
+<span class="go">    &quot;tariff_code&quot;: &quot;E-1R-VAR-22-10-01-C&quot;,</span>
+<span class="go">    &quot;valid_from&quot;: &quot;2023-03-17 00:00:00+00:00&quot;,</span>
+<span class="go">    &quot;valid_to&quot;: &quot;2023-03-18 00:00:00+00:00&quot;</span>
+<span class="go">  },</span>
+<span class="go">  {</span>
+<span class="go">    &quot;tariff_code&quot;: &quot;E-1R-AGILE-FLEX-22-11-25-C&quot;,</span>
+<span class="go">    &quot;valid_from&quot;: &quot;2023-03-18 00:00:00+00:00&quot;,</span>
+<span class="go">    &quot;valid_to&quot;: &quot;2024-02-15 00:00:00+00:00&quot;</span>
+<span class="go">  },</span>
+<span class="go">   {</span>
+<span class="go">    &quot;tariff_code&quot;: &quot;E-1R-INTELLI-VAR-22-10-14-C&quot;,</span>
+<span class="go">    &quot;valid_from&quot;: &quot;2024-02-15 00:00:00+00:00&quot;,</span>
+<span class="go">    &quot;valid_to&quot;: None</span>
+<span class="go">  }</span>
+<span class="go">  ]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">account</span><span class="o">.</span><span class="n">add_method</span><span class="p">(</span><span class="s1">&#39;Custom tariff&#39;</span><span class="p">,</span> <span class="n">custom_list</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+          <b><code>name</code></b>
+              (<code>str</code>)
+          –
+          <div class="doc-md-description">
+            <p>The unique name for this calculation method.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code>tariff_agreements</code></b>
+              (<code>list</code>)
+          –
+          <div class="doc-md-description">
+            <p>A custom list of tariff codes with valid from and valid to dates.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code>energy_type</code></b>
+              (<code>str | None</code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>The energy type for which to add this calculation method.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code>replace</code></b>
+              (<code>bool</code>, default:
+                  <code>False</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>Whether to replace an existing calculation method with the same name.</p>
+          </div>
+        </li>
+    </ul>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="juice._tariffs.add_method_by_product_code" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">add_method_by_product_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">product_code</span><span class="p">,</span> <span class="n">energy_type</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Add a calculation method using an Octopus product code. e.g. "AGILE-23-12-06".</p>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">account</span><span class="o">.</span><span class="n">add_method_by_product_family</span><span class="p">(</span><span class="s1">&#39;AGILE-23-12-06&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+          <b><code>product_code</code></b>
+              (<code>str</code>)
+          –
+          <div class="doc-md-description">
+            <p>The Octopus product code to add. e.g. "SILVER-23-12-06"</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code>energy_type</code></b>
+              (<code>str | None</code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>Set the energy type for this particular method call.</p>
+          </div>
+        </li>
+    </ul>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="juice._tariffs.add_method_by_product_family" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">add_method_by_product_family</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">family_name</span><span class="p">,</span> <span class="n">energy_type</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Add a calculation method using an Octopus product family. e.g. "Agile Octopus". Only tariffs available in your local local Octopus products database will be added to the method.</p>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">account</span><span class="o">.</span><span class="n">add_method_by_product_family</span><span class="p">(</span><span class="s1">&#39;Agile Octopus&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+          <b><code>family_name</code></b>
+              (<code>str</code>)
+          –
+          <div class="doc-md-description">
+            <p>The name of the Octopus product family to add. e.g. "Flexible Octopus"</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code>energy_type</code></b>
+              (<code>str | None</code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>Set the energy type for this particular method call.</p>
+          </div>
+        </li>
+    </ul>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="juice._tariffs.remove_method" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">remove_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">energy_type</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Remove a calculation method.</p>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">account</span><span class="o">.</span><span class="n">remove_tariff</span><span class="p">(</span><span class="s1">&#39;Bill&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+          <b><code>name</code></b>
+              (<code>str</code>)
+          –
+          <div class="doc-md-description">
+            <p>The name of the calculation method to remove.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code>energy_type</code></b>
+              (<code>str | None</code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>The energy type from which to remove the calculation method.</p>
+          </div>
+        </li>
+    </ul>
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="juice._bill"></a>
+    <div class="doc doc-contents first">
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="juice._bill.calculate" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">to_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">energy_type</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Calculate costs for the methods added.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+          <b><code>from_date</code></b>
+              (<code>None | str | <span title="datetime.datetime">datetime</span></code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>A date from which to begin calculations.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code>to_date</code></b>
+              (<code>None | str | <span title="datetime.datetime">datetime</span></code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>A date to which calculate.</p>
+          </div>
+        </li>
+    </ul>
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="juice._print"></a>
+    <div class="doc doc-contents first">
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="juice._print.print_bill" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">print_bill</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">to_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">energy_type</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Print the bill for the account.</p>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">account</span><span class="o">.</span><span class="n">print_bill</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">account</span><span class="o">.</span><span class="n">print_bill</span><span class="p">(</span><span class="s1">&#39;2023-01-15&#39;</span><span class="p">,</span> <span class="s1">&#39;2024-04-16&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+          <b><code>from_date</code></b>
+              (<code>str | <span title="datetime.datetime">datetime</span></code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>The date from which to print the costs.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code>to_date</code></b>
+              (<code>str | <span title="datetime.datetime">datetime</span></code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>The date to which to print the costs.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code>energy_type</code></b>
+              (<code>str | None</code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>The energy type to use in the bill.</p>
+          </div>
+        </li>
+    </ul>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="juice._print.print_compare" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">print_compare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">to_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">energy_type</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Print a comparison table of all the calculation methods.</p>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">account</span><span class="o">.</span><span class="n">print_compare</span><span class="p">(</span><span class="s1">&#39;Agile Octopus&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">account</span><span class="o">.</span><span class="n">print_compare</span><span class="p">(</span><span class="s1">&#39;Flexible Octopus&#39;</span><span class="p">,</span> <span class="s1">&#39;2023-01-15&#39;</span><span class="p">,</span> <span class="s1">&#39;2024-04-16&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+          <b><code>from_date</code></b>
+              (<code>str | <span title="datetime.datetime">datetime</span></code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>The date from which to print the comparion.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code>to_date</code></b>
+              (<code>str | <span title="datetime.datetime">datetime</span></code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>The date to which to print the comparion.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code>energy_type</code></b>
+              (<code>str | None</code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>The energy type to use in the comparion.</p>
+          </div>
+        </li>
+    </ul>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="juice._print.print_method" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">print_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">from_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">to_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">energy_type</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Print the bill for the specified calculation method.</p>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">account</span><span class="o">.</span><span class="n">print_method</span><span class="p">(</span><span class="s1">&#39;Agile Octopus&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">account</span><span class="o">.</span><span class="n">print_method</span><span class="p">(</span><span class="s1">&#39;Flexible Octopus&#39;</span><span class="p">,</span> <span class="s1">&#39;2023-01-15&#39;</span><span class="p">,</span> <span class="s1">&#39;2024-04-16&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+          <b><code>from_date</code></b>
+              (<code>str | <span title="datetime.datetime">datetime</span></code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>The date from which to print the costs.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code>to_date</code></b>
+              (<code>str | <span title="datetime.datetime">datetime</span></code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>The date to which to print the costs.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code>energy_type</code></b>
+              (<code>str | None</code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>The energy type to use in the bill.</p>
+          </div>
+        </li>
+    </ul>
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="juice._database"></a>
+    <div class="doc doc-contents first">
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="juice._database.update" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force_refresh</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Update/create consumption, account tariffs, Octopus products and existing tariff databases.</p>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">account</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+</code></pre></div>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+          <b><code>force_refresh</code></b>
+              (<code>bool | None</code>, default:
+                  <code>False</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>Whether to delete and recreate the databases.</p>
+          </div>
+        </li>
+    </ul>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="juice._database.update_by_product_code" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">update_by_product_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">product_codes</span><span class="p">,</span> <span class="n">force_refresh</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">energy_type</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Update/create databases of supplied Octopus product codes.</p>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">product_codes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Agile Octopus&#39;</span><span class="p">,</span> <span class="s1">&#39;Flexible Octopus&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">account</span><span class="o">.</span><span class="n">update_by_product_code</span><span class="p">(</span><span class="n">product_codes</span><span class="p">)</span>
+<span class="go">OR</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">account</span><span class="o">.</span><span class="n">update_by_product_code</span><span class="p">(</span><span class="s1">&#39;Agile Octopus&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+          <b><code>product_codes</code></b>
+              (<code>list | str</code>)
+          –
+          <div class="doc-md-description">
+            <p>A list of Octopus product codes to update.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code>force_refresh</code></b>
+              (<code>bool | None</code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>Whether to delete and recreate the databases.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code>energy_type</code></b>
+              (<code>str | None</code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>Update for the specified energy type.</p>
+          </div>
+        </li>
+    </ul>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="juice._database.update_by_product_family" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">update_by_product_family</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">product_families</span><span class="p">,</span> <span class="n">force_refresh</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">energy_type</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Update/create tariff databases of supplied Octopus product families. Only tariffs available in your local Octopus products database will be updated.</p>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">product_families</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Agile Octopus&#39;</span><span class="p">,</span> <span class="s1">&#39;Flexible Octopus&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">account</span><span class="o">.</span><span class="n">update_by_product_family</span><span class="p">(</span><span class="n">product_families</span><span class="p">)</span>
+<span class="go">OR </span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">account</span><span class="o">.</span><span class="n">update_by_product_family</span><span class="p">(</span><span class="s1">&#39;Flexible Octopus&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+          <b><code>product_families</code></b>
+              (<code>list | str</code>)
+          –
+          <div class="doc-md-description">
+            <p>A list of Octopus product families to update.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code>force_refresh</code></b>
+              (<code>bool | None</code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>Whether to delete and recreate the databases.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code>energy_type</code></b>
+              (<code>str | None</code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>Update for the specified energy type.</p>
+          </div>
+        </li>
+    </ul>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="juice._database.update_by_tariff_code" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">update_by_tariff_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tariff_codes</span><span class="p">,</span> <span class="n">force_refresh</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Update/create databases of supplied Octopus tariff codes.</p>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">tariff_codes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;E-1R-AGILE-FLEX-22-11-25-C&#39;</span><span class="p">,</span> <span class="s1">&#39;E-1R-INTELLI-VAR-22-10-14-C&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">account</span><span class="o">.</span><span class="n">update_by_product_code</span><span class="p">(</span><span class="n">tariff_codes</span><span class="p">)</span>
+<span class="go">OR</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">account</span><span class="o">.</span><span class="n">update_by_product_code</span><span class="p">(</span><span class="s1">&#39;E-1R-AGILE-FLEX-22-11-25-C&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+          <b><code>tariff_codes</code></b>
+              (<code>list</code>)
+          –
+          <div class="doc-md-description">
+            <p>A list of Octopus tariff codes to update.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code>force_refresh</code></b>
+              (<code>bool | None</code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>Whether to delete and recreate the databases.</p>
+          </div>
+        </li>
+    </ul>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="juice._database.update_existing_products" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">update_existing_products</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force_refresh</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Update existing Octopus tariff databases.</p>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">account</span><span class="o">.</span><span class="n">update_existing_products</span><span class="p">()</span>
+</code></pre></div>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+          <b><code>force_refresh</code></b>
+              (<code>bool | None</code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>Whether to delete and recreate the databases.</p>
+          </div>
+        </li>
+    </ul>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="juice._database.update_products_database_by_product_code" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">update_products_database_by_product_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">product_codes</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Add product information to local Octopus products database.</p>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">product_codes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;AGILE-FLEX-22-11-25&#39;</span><span class="p">,</span> <span class="s1">&#39;SILVER-FLEX-22-11-25&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">account</span><span class="o">.</span><span class="n">update_products_database_by_product_code</span><span class="p">(</span><span class="n">product_codes</span><span class="p">)</span>
+<span class="go">OR</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">account</span><span class="o">.</span><span class="n">update_products_database_by_product_code</span><span class="p">(</span><span class="s1">&#39;AGILE-FLEX-22-11-25&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+          <b><code>product_codes</code></b>
+              (<code>list | str</code>)
+          –
+          <div class="doc-md-description">
+            <p>A list of Octopus products to add to the products database.</p>
+          </div>
+        </li>
+    </ul>
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.ad660dcc.min.js"></script>
+      
+    
+  </body>
+</html>
