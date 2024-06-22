@@ -1,6 +1,7 @@
 from juice import utils
 import getpass
 
+# change these connection settings if you need to!
 config = {
     'user': getpass.getuser(),  # this will get your username
     'password': 'password_string',
