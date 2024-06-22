@@ -9,6 +9,10 @@
       
       
       
+        <link rel="prev" href="../install/">
+      
+      
+        <link rel="next" href="../reference/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -189,6 +193,36 @@
       
   
   
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Tutorial
+  </span>
+  
+
+      </a>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
   
   
     <li class="md-nav__item">
@@ -306,8 +340,9 @@ account.print_compare('2024-04-17', '2024-05-17')
 +-------------------+-------------+--------+
 </code></pre>
 <p>This will be the same as the real bill for the same period:</p>
-<p><img src="./assets/bill.png" alt="A real bill screenshot showing that the print_bill() method will show the the same figures as the real bill." width="350"/></p>
+<p><img src="/assets/bill.png" alt="A real bill screenshot showing that the print_bill() method will show the the same figures as the real bill." width="450"/></p>
 <p><br /></p>
+<p>(Currently due to rounding issues gas bills and tariffs can only be calculated to the nearest 10 pence or so. If you know Octopus Energy's rounding scheme for gas please get in touch. Gas bills and tariffs can only be calculated for accounts with an SMETS2 gas meters that measure gas in m^3. Please get in touch so I can build support for SMETS1 gas meters that measure gas in kWh.)</p>
 <p><code>account.print_compare('2024-04-17', '2024-05-17')</code></p>
 <ol>
 <li>Print the comparison for all the tariffs added earlier including the bill between 17th April 2024 and 17th May 2024.</li>
