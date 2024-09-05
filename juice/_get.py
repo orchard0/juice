@@ -164,6 +164,15 @@ def _get_consumption(
 
     table_name = account_id + "_" + mpan_or_mprn + "_" + serial_number
 
+    url = (
+        CONSUMPTION_URL.format(
+            energy_type=energy_type,
+            mpan_or_mprn=mpan_or_mprn,
+            serial_number=serial_number,
+        )
+        + f"?page_size={PAGE_SIZE}"
+    )
+
     if not force_refresh and datetime.now(UTC) < query_updates(
         psql_config, table_name
     ) + timedelta(hours=UPDATE_INTERVAL):
@@ -180,15 +189,6 @@ def _get_consumption(
         drop_table(psql_config, table_name)
 
     create_consumption_db(psql_config, table_name)
-
-    url = (
-        CONSUMPTION_URL.format(
-            energy_type=energy_type,
-            mpan_or_mprn=mpan_or_mprn,
-            serial_number=serial_number,
-        )
-        + f"?page_size={PAGE_SIZE}"
-    )
 
     while True:
         r = requests.get(url, auth=HTTPBasicAuth(api_key, ""), headers=headers)
