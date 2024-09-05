@@ -273,6 +273,7 @@ def insert_calorific(psql_config, results, table_name="calorific_values"):
     for row in results:
         # extracts the LDZ code from the string i.e. 'NW' and replaces it back into the row
         row[2] = re.findall(r"(?:Calorific Value, LDZ\()(\w+)[\)]", row[2])[0]
+        row[1] = datetime.strptime(row[1], "%d/%m/%Y")
         insert_query = SQL(
             "INSERT INTO {} (applicable_date, exit_zone, calorific_value) \
                 VALUES (%s, %s, %s)\
