@@ -128,7 +128,7 @@ def add_bill(self, energy_type=None):
     self.add_method('Bill', agreements, energy_type, replace=True)
     pass
 
-def add_method(self, name: str, tariff_agreements: list, energy_type: str | None = None, replace: bool = False):
+def add_method(self, name: str, tariff_agreements: list, energy_type: str | None = None, replace: bool = False) -> None:
 
     """
     Add a calculation method using a custom tariff list.

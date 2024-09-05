@@ -49,6 +49,21 @@ class Juice:
         update_products_database_by_product_code,
     )
 
+
+    
+    __all__ = [        'update_by_product_code',
+        'update_by_product_family',
+        'update_by_tariff_code',
+        'update_existing_products',
+        'update',
+        'update_products_database_by_product_code',        'remove_method',
+        'add_bill',
+        'add_method',
+        'add_method_by_product_family',
+        'add_method_by_product_code'
+]
+
+
     def __init__(
         self,
         API_KEY: str,
@@ -125,7 +140,7 @@ class Juice:
         pass
 
     @property
-    def data(self):
+    def data(self) -> str:
 
         """
         Return json formated calculations settings.
