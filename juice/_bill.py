@@ -299,7 +299,7 @@ def calculate(self, from_date: None | str | datetime = None, to_date: None | str
     if to_date:
         to_date = _parse_date(to_date)
     else:
-        to_date = _parse_date(add=-1)
+        to_date = _parse_date(add=-2)
 
     if from_date > to_date:
         raise ValueError(
