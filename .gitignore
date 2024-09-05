@@ -12,6 +12,11 @@ Testing
 venv
 docs
 
+check.py
+update.py
+temp.py
+test*
+
 .vscode
 
 # C extensions
