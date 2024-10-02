@@ -201,13 +201,13 @@ def print_compare(self, from_date: str | datetime = None, to_date: str | datetim
     from_date = pd.to_datetime(from_date).to_datetime64()
     to_date = pd.to_datetime(to_date).to_datetime64()
 
-    from_date = (
+    from_date_converted = (
         pd.to_datetime(from_date)
         .tz_localize("Europe/London")
         .tz_convert("UTC")
         .to_datetime64()
     )
-    to_date = (
+    to_date_converted = (
         pd.to_datetime(to_date)
         .tz_localize("Europe/London")
         .tz_convert("UTC")
@@ -219,6 +219,10 @@ def print_compare(self, from_date: str | datetime = None, to_date: str | datetim
     for method in data["methods"]:
         try:
             datax = method["dataframe"]
+            name = method["name"]
+            cost_unit_rate = name + "_cost_unit_rate"
+            cost_standing_charge = name + "_cost_standing_charge"
+
 
         except KeyError:
             raise ValueError(
@@ -228,21 +232,32 @@ def print_compare(self, from_date: str | datetime = None, to_date: str | datetim
         name = method["name"]
         names.append(name)
 
-        datax = datax.loc[(datax["from"] >= from_date) & (datax["from"] < to_date)]
-        total = datax[name + "_total"].sum() * np.float64(1.05)
+        extracted_aware = datax.loc[
+            (datax["from"] < to_date_converted) & (datax["to"] > from_date_converted)
+        ]
+
+        extracted_naive = datax.loc[(datax["from"] < to_date) & (datax["to"] > from_date)]
+
+
+        cost_rate = extracted_aware[cost_unit_rate].sum() / 100
+        # standing charges and the number of days are worked out on the dataframe extracted using tz-naive dates
+        cost_standing = extracted_naive[cost_standing_charge].sum() / 100
+        subtotal = cost_rate + cost_standing
+        vat = ((subtotal / 100) * 5).round(2)
+        total = (subtotal + vat).round(2)
+
         totals.append(total)
 
-    totals_np = np.array(totals)
+    totals_in = np.array(totals)
     names_np = np.array(names)
 
     out = pd.DataFrame(
-        ((totals_np[:, None] - totals_np) / np.abs(total) * 100).round(1),
+        ((totals_in[:, None] - totals_in) / np.abs(total) * 100).round(1),
         index=names_np,
         columns=names_np,
     )
     np.fill_diagonal(out.values, np.nan)
 
-    totals_in = (totals_np / 100).round(2)
     totals_df = pd.DataFrame(totals_in, index=names, columns=["Total (£)"])
 
     totals_df_rows = pd.DataFrame(datax.shape[0], index=names, columns=["Rows"])
