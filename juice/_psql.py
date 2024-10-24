@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, UTC
 import psycopg
 from psycopg.sql import SQL, Identifier, Literal, Composed
 import re
@@ -58,7 +58,7 @@ def query_updates(psql_config, updated_table_name, table_name="updates"):
     try:
         r = result[0][0]
     except IndexError:
-        r = datetime.datetime(1900, 1, 1, 0, 0, 0, 0, datetime.UTC)
+        r = datetime(1900, 1, 1, 0, 0, 0, 0, UTC)
     return r
 
 
