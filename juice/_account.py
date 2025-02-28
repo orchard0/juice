@@ -100,9 +100,12 @@ def _parse_account_information(data):
                 for agreement in meter_point["agreements"]:
                     agreement["energy_type"] = energy_type
                     for key in ["valid_from", "valid_to"]:
-                        agreement[key] = datetime.fromisoformat(
-                            agreement[key]
-                        ).astimezone(LONDON)
+                        try:
+                            agreement[key] = datetime.fromisoformat(
+                                agreement[key]
+                            ).astimezone(LONDON)
+                        except TypeError:
+                            agreement[key] = datetime.now().astimezone(LONDON)
 
                     agreements_data.append(agreement)
 
