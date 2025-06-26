@@ -16,7 +16,6 @@ ENERGY_TYPES = {"gas", "electricity"}
 
 class Juice:
 
-
     from ._account import (
         _set_account_info,
         _read_account_json,
@@ -34,6 +33,7 @@ class Juice:
         add_bill,
         _add_consumption,
         add_method,
+        add_method_easy,
         add_method_by_product_family,
         add_method_by_product_code,
     )
@@ -49,31 +49,29 @@ class Juice:
         update_products_database_by_product_code,
     )
 
-
-    
-    __all__ = [        'update_by_product_code',
-        'update_by_product_family',
-        'update_by_tariff_code',
-        'update_existing_products',
-        'update',
-        'update_products_database_by_product_code',        'remove_method',
-        'add_bill',
-        'add_method',
-        'add_method_by_product_family',
-        'add_method_by_product_code'
-]
-
+    __all__ = [
+        "update_by_product_code",
+        "update_by_product_family",
+        "update_by_tariff_code",
+        "update_existing_products",
+        "update",
+        "update_products_database_by_product_code",
+        "remove_method",
+        "add_bill",
+        "add_method",
+        "add_method_by_product_family",
+        "add_method_by_product_code",
+    ]
 
     def __init__(
         self,
         API_KEY: str,
         ACCOUNT_ID: str,
         psql_config: dict | None = None,
-        LDZ: str | None =None,
-        energy_type: str | None =None,
-        headers: dict | None =None,
+        LDZ: str | None = None,
+        energy_type: str | None = None,
+        headers: dict | None = None,
     ) -> None:
-        
         """
         Juice constructor prepares the account information to carry out calculations and comparisons.
 
@@ -86,11 +84,11 @@ class Juice:
             psql_config: A dictionary containing PostgresQL connection settings.
             LDZ: A string with the account's gas local distribution zone id. It's only need for accounts with gas energy and when a LDZ database has not been configured.
             energy_type: An energy type to be set for succeeding methods to use.
-            headers: A dictionary containing settings to be passed on to Python Requests library when making network requests. 
+            headers: A dictionary containing settings to be passed on to Python Requests library when making network requests.
 
         Returns:
             Juice constructor
-        
+
         """
 
         self._create_working_dirs()
@@ -141,7 +139,6 @@ class Juice:
 
     @property
     def data(self) -> str:
-
         """
         Return json formated calculations settings.
 
@@ -153,7 +150,7 @@ class Juice:
 
         Returns:
             str
-        
+
         """
 
         def handle(i):
@@ -165,7 +162,6 @@ class Juice:
         return json.dumps(self.calcs, default=handle)
 
     def set_energy(self, energy_type: str):
-
         """
         Set energy type for succeeding methods that rely on an optional energy_type parameter.
 
@@ -175,11 +171,10 @@ class Juice:
         Args:
             energy_type: The energy type to set.
 
-        
+
         Returns:
             None
         """
-
 
         self._check_energy_type_input(energy_type)
         self.energy_type = energy_type

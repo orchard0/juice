@@ -5,8 +5,12 @@ from ._utils import _parse_date, _format_date
 from datetime import datetime
 
 
-def print_bill(self, from_date: str | datetime = None, to_date: str | datetime = None, energy_type: str | None = None):
-
+def print_bill(
+    self,
+    from_date: str | datetime = None,
+    to_date: str | datetime = None,
+    energy_type: str | None = None,
+):
     """
     Print the bill for the account.
 
@@ -22,14 +26,19 @@ def print_bill(self, from_date: str | datetime = None, to_date: str | datetime =
 
     Returns:
         None
-        
+
     """
 
     self.print_method("Bill", from_date, to_date, energy_type)
 
 
-def print_method(self, name, from_date: str | datetime = None, to_date: str | datetime = None, energy_type: str | None = None):
-
+def print_method(
+    self,
+    name,
+    from_date: str | datetime = None,
+    to_date: str | datetime = None,
+    energy_type: str | None = None,
+):
     """
     Print the bill for the specified calculation method.
 
@@ -45,14 +54,12 @@ def print_method(self, name, from_date: str | datetime = None, to_date: str | da
 
     Returns:
         None
-        
-    """
 
+    """
 
     if energy_type is None:
         energy_type = self.energy_type
     self._check_energy_type_input(energy_type)
-
 
     if from_date:
         from_date = _parse_date(from_date)
@@ -79,6 +86,7 @@ def print_method(self, name, from_date: str | datetime = None, to_date: str | da
         )
 
     _print_cost(method, from_date, to_date)
+
 
 @staticmethod
 def _print_cost(method, from_date, to_date):
@@ -163,8 +171,12 @@ def _print_cost(method, from_date, to_date):
     print(table)
 
 
-def print_compare(self, from_date: str | datetime = None, to_date: str | datetime = None, energy_type: str | None = None):
-
+def print_compare(
+    self,
+    from_date: str | datetime = None,
+    to_date: str | datetime = None,
+    energy_type: str | None = None,
+):
     """
     Print a comparison table of all the calculation methods.
 
@@ -179,7 +191,7 @@ def print_compare(self, from_date: str | datetime = None, to_date: str | datetim
 
     Returns:
         None
-        
+
     """
 
     if energy_type is None:
@@ -198,6 +210,7 @@ def print_compare(self, from_date: str | datetime = None, to_date: str | datetim
     else:
         to_date = _parse_date(add=-1)
 
+    print(from_date.strftime("%Y-%m-%d"), "to", to_date.strftime("%Y-%m-%d"))
     from_date = pd.to_datetime(from_date).to_datetime64()
     to_date = pd.to_datetime(to_date).to_datetime64()
 
@@ -223,7 +236,6 @@ def print_compare(self, from_date: str | datetime = None, to_date: str | datetim
             cost_unit_rate = name + "_cost_unit_rate"
             cost_standing_charge = name + "_cost_standing_charge"
 
-
         except KeyError:
             raise ValueError(
                 "The calculations for compare were not found. It probably means you need to use the run() method on the class before calling compare."
@@ -236,8 +248,9 @@ def print_compare(self, from_date: str | datetime = None, to_date: str | datetim
             (datax["from"] < to_date_converted) & (datax["to"] > from_date_converted)
         ]
 
-        extracted_naive = datax.loc[(datax["from"] < to_date) & (datax["to"] > from_date)]
-
+        extracted_naive = datax.loc[
+            (datax["from"] < to_date) & (datax["to"] > from_date)
+        ]
 
         cost_rate = extracted_aware[cost_unit_rate].sum() / 100
         # standing charges and the number of days are worked out on the dataframe extracted using tz-naive dates
