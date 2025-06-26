@@ -71,6 +71,56 @@ def _join(psql_config, dbname, dataframe, from_date, to_date, LDZ=None):
     return filtered_by_dates
 
 
+def _join_custom(rate, dataframe, from_date, to_date):
+
+    def get_unit_rates(rate, from_date, to_date):
+
+        s = [
+            (
+                rate,
+                from_date,
+                to_date,
+            )
+        ]
+
+        if not s or len(s) == 0:
+            raise ValueError
+
+        u = pd.DataFrame(s, columns=["rate", "valid_from", "valid_to"])
+
+        u["rate"] = u["rate"].astype(np.float64)
+
+        with pd.option_context("future.no_silent_downcasting", True):
+            u = u.fillna(pd.Timestamp.utcnow()).infer_objects(copy=False)
+
+        u["valid_from"] = u["valid_from"].dt.tz_convert(None)
+        u["valid_to"] = u["valid_to"].dt.tz_convert(None)
+
+        return u
+
+    rates = get_unit_rates(
+        rate,
+        from_date,
+        to_date,
+    )
+
+    from_date = pd.to_datetime(from_date).to_datetime64()
+    to_date = pd.to_datetime(to_date).to_datetime64()
+
+    joined = rates.conditional_join(
+        dataframe,
+        ("valid_to", "from", ">"),
+        ("valid_from", "to", "<"),
+        df_columns="rate",
+    )
+
+    filtered_by_dates = joined.loc[
+        (joined["from"] >= from_date) & (joined["from"] < to_date)
+    ]
+
+    return filtered_by_dates
+
+
 def _merge_dataframes(methods):
 
     result = methods.copy()
@@ -237,8 +287,6 @@ def _run_config(psql_config, data, energy_type, from_date, to_date, LDZ=None):
                 if agreement["valid_from"] == agreement["valid_to"]:
                     continue
 
-                tariff_code = agreement["tariff_code"] + cost_type
-
                 valid_from = agreement["valid_from"]
                 valid_to = agreement["valid_to"]
 
@@ -246,13 +294,33 @@ def _run_config(psql_config, data, energy_type, from_date, to_date, LDZ=None):
                     valid_to = datetime.now()
 
                 try:
-                    joined = _join(
-                        psql_config, tariff_code, consumption_df, valid_from, valid_to
-                    )
+                    standing_charge = agreement["standing_charge"]
+                    unit_rate = agreement["unit_rate"]
 
+                    if cost_type == "_standard_unit_rates":
+                        rate = unit_rate
+                    else:
+                        rate = standing_charge
+
+                    joined = _join_custom(rate, consumption_df, valid_from, valid_to)
                     tables.append(joined)
-                except ValueError:
-                    continue
+
+                # if there is no standing charge and unit rate specified then look up the information in the database
+                except KeyError:
+                    tariff_code = agreement["tariff_code"] + cost_type
+
+                    try:
+                        joined = _join(
+                            psql_config,
+                            tariff_code,
+                            consumption_df,
+                            valid_from,
+                            valid_to,
+                        )
+
+                        tables.append(joined)
+                    except ValueError:
+                        continue
 
             try:
                 x = pd.concat(tables).sort_values("from")

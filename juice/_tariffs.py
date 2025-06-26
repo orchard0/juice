@@ -1,4 +1,11 @@
-from ._psql import query_octopus_product_by_family_name, query_octopus_product_by_product_code
+from decimal import Decimal
+from datetime import datetime
+from pytz import timezone
+from ._psql import (
+    query_octopus_product_by_family_name,
+    query_octopus_product_by_product_code,
+)
+
 
 def remove_method(self, name: str, energy_type: str | None = None):
     """
@@ -220,6 +227,38 @@ def add_method(
 
     pass
 
+
+def add_method_easy(
+    self,
+    name: str,
+    unit_rate: Decimal,
+    standing_charge: Decimal,
+    from_date: str,
+    to_date: str | None = None,
+):
+
+    if to_date:
+        try:
+            to_date = datetime.strptime(to_date, "%Y-%m-%d").astimezone(
+                tz=timezone("Europe/London")
+            )
+        except TypeError:
+            raise
+    else:
+        to_date = datetime.now().astimezone(tz=timezone("Europe/London"))
+
+    custom = [
+        {
+            "valid_from": datetime.strptime(from_date, "%Y-%m-%d").astimezone(
+                tz=timezone("Europe/London")
+            ),
+            "valid_to": to_date,
+            "standing_charge": Decimal(standing_charge),
+            "unit_rate": Decimal(unit_rate),
+        },
+    ]
+
+    self.add_method(name, custom)
 
 
 def _add_consumption(self):
