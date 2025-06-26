@@ -272,8 +272,12 @@ def _run_config(psql_config, data, energy_type, from_date, to_date, LDZ=None):
     }
 
 
-def calculate(self, from_date: None | str | datetime = None, to_date: None | str | datetime = None, energy_type: None | str = None):
-
+def calculate(
+    self,
+    from_date: None | str | datetime = None,
+    to_date: None | str | datetime = None,
+    energy_type: None | str = None,
+):
     """
     Calculate costs for the methods added.
 
@@ -311,7 +315,7 @@ def calculate(self, from_date: None | str | datetime = None, to_date: None | str
 
     _check_method_dates(data["methods"], from_date, to_date)
 
-    data = self._run_config(
+    data = _run_config(
         self.psql_config, data, energy_type, from_date, to_date, self.LDZ
     )
 
